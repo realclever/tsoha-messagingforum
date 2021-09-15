@@ -1,0 +1,20 @@
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
+<link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='styles/mainpage.css') }}">
+
+{% extends "layout.html" %}
+{% block title %} Main {% endblock %}
+{% block content %}
+{% if session.user_id %}
+<h4>Main page</h4>
+<small>Total x: {{ total }}</small>
+<p>Today is: <span id="datetime"></span></p><script>var dt = new Date();
+    document.getElementById("datetime").innerHTML=dt.toLocaleString();</script>
+<button onclick="location.href='/logout'">Log out</button>
+{% else %}
+<button onclick="location.href='/login'">Login</button>
+{% endif %}
+<br>
+</div>
+<br>
+<h4></h4>
+{% endblock %}
