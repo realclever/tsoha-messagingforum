@@ -1,9 +1,7 @@
 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
 <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='styles/mainpage.css') }}">
 
-<!doctype html>
-
-<div>
+<div class="top">
 <h2><img src="https://www.iconexperience.com/_img/o_collection_png/green_dark_grey/48x48/plain/user_message.png"><strong> <a href="/"> Discussion forum </a></strong> </h2>
 
 {% if session.user_id %}
@@ -15,7 +13,4 @@ Signed in as <b>{{session.user_name}}</b>.
 <button onclick="location.href='/login'">Log in</button>
 {% endif %}
 </div>
-<hr>
-<h3>Welcome to Discussion forum!</h3>
-<hr>
 {% block content %}{% endblock %}
