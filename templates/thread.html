@@ -1,0 +1,30 @@
+{% extends "layout.html" %}
+{% block title %} thread {% endblock %}
+{% block content %}
+<h3>{{thread.name}}</h3>
+
+<div>
+    <ul style="list-style-type:none;">
+        {% for subthread in subthreads %}
+        {% if session.user_id == subthread.user_id or session.user_role == 2 %}
+        <form action="/remove_subthread" method="POST">
+            <a href="/subthread/{{subthread.id}}"><li><h4>{{subthread.name}}<br><input type="submit" value="Remove"></li></h4></a> 
+            <input type="hidden" name="subthread_id" value="{{subthread.id}}">
+        </form>
+        {% else %}
+        <a href="/subthread/{{subthread.id}}"><li><h4>{{subthread.name}}</li></h4></a>
+        {% endif %}
+        {% endfor %}
+    </ul>
+</div>
+
+{% if session.user_role == 1 or session.user_role == 2 %}
+<form class="form" action="/thread/{{thread.id}}" method="POST">
+    <p><b>Create new conversation</b></p>
+    <p><input type="text" name="name" placeholder="Subject"></p>
+    <p><textarea name="content" placeholder="Write something.."></textarea></p>
+    <button class="button">Create</button>
+</form>
+<p></p>
+{% endif %}
+{% endblock %}

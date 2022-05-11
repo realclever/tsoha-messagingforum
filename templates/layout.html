@@ -4,10 +4,10 @@
 <!doctype html>
 
 <div>
-<h2><img src="https://www.iconexperience.com/_img/o_collection_png/green_dark_grey/48x48/plain/user_message.png"><strong> <a href="/"> Messaging forum | in development</a></strong> </h2>
+<h2><img src="https://www.iconexperience.com/_img/o_collection_png/green_dark_grey/48x48/plain/user_message.png"><strong> <a href="/"> Discussion forum </a></strong> </h2>
 
 {% if session.user_id %}
-Signed in as <b>{{ session.user_name }}</b>.
+Signed in as <b>{{session.user_name}}</b>.
 <button onclick="location.href='/logout'">Log out</button>
 {% else %}
 
@@ -16,6 +16,6 @@ Signed in as <b>{{ session.user_name }}</b>.
 {% endif %}
 </div>
 <hr>
-<h3>Welcome to Messaging forum!</h3>
+<h3>Welcome to Discussion forum!</h3>
 <hr>
 {% block content %}{% endblock %}

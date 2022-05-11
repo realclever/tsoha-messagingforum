@@ -2,23 +2,50 @@ from app import app
 from flask import render_template, request, redirect
 import users
 import threads
+import subthreads
 from db import db
-
 
 @app.route("/", methods=["GET", "POST"])
 def index():
-    list = threads.get_threads()
-    return render_template("index.html", threads=list)
+    thread = threads.get_threads()
 
-@app.route("/create_thread", methods=["POST"])
-def create_thread():
-    users.require_role(2)
+    if request.method == "GET":
+        return render_template("index.html", threads=thread)
 
-    name = request.form["name"]
-    if threads.create_thread(name):
+    if request.method == "POST":
+        users.require_role(2)
+
+        name = request.form["name"]
+        des = request.form["des"]
+    if threads.create_thread(name, des):
+        return redirect("/")
+    else:
+        return render_template("error.html", message="Something went wrong") 
+
+@app.route("/thread/<int:id>", methods=["GET", "POST"])
+def thread(id):
+    thread = threads.get_thread(id)
+    subthread = subthreads.get_subthreads(id)
+
+    if request.method == "GET":
+        return render_template("thread.html", thread=thread, subthreads=subthread)
+
+    if request.method == "POST":
+        users.require_role(1)
+        name = request.form["name"]
+        content = request.form["content"]
+    if subthreads.create_subthread(name, content, id):
         return redirect("/")
     else:
         return render_template("error.html", message="Something went wrong")
+
+@app.route("/remove_subthread", methods=["POST"])   
+def remove_subthread():
+    
+    if "subthread_id" in request.form:
+        subthread_id = request.form["subthread_id"]
+        subthreads.remove_subthread(subthread_id)
+    return redirect("/")
 
 @app.route("/remove_thread", methods=["POST"])   
 def remove_thread():
@@ -29,7 +56,7 @@ def remove_thread():
         threads.remove_thread(thread_id)
     return redirect("/")
 
-
+      
 @app.route("/login", methods=["GET", "POST"])
 def login():
     if request.method == "GET":
@@ -40,15 +67,13 @@ def login():
         password = request.form["password"]
         
         if not users.login(username, password):
-            return render_template("error.html", message="Invalid username or password. ")
+            return render_template("error.html", message="Invalid username or password.")
         return redirect("/")    
-
 
 @app.route("/logout")
 def logout():
     users.logout()
     return redirect("/")
-
 
 @app.route("/register", methods=["GET", "POST"])
 def register():
@@ -75,3 +100,4 @@ def register():
         if not users.register(username, password1, role):
             return render_template("error.html", message="Something went wrong, try again.")
         return redirect("/")
+

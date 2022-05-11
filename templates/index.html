@@ -14,12 +14,12 @@
 <br>
 <ul style="list-style-type:none;">
     {% for thread in threads %}  
-    <li><h4><img src="https://www.iconexperience.com/_img/o_collection_png/green_dark_grey/24x24/plain/message.png">&nbsp;<a href="/thread/{{thread.id}}">{{thread.name}}</a></h4>{{thread.created_at.strftime("%Y-%m-%d %H:%M:%S")}}</li>
+    <li><h4><a href="/thread/{{thread.id}}">{{thread.name}}</a></h4>{{thread.des}}<br>{{thread.created_at.strftime("%Y-%m-%d")}}</li>
     <br>
     {% if session.user_role == 2 %}
     <form action="/remove_thread" method="POST">
         <input type="submit" value="Remove"> 
-        <input type="hidden" name="thread_id" value="{{ thread.id }}">
+        <input type="hidden" name="thread_id" value="{{thread.id}}">
     </form>
     <br>
     {% endif %}
@@ -27,18 +27,17 @@
 
 </ul>
 
-
 {% if session.user_role == 2 %}
-<form class="form" action="/create_thread" method="POST">
+<form class="form" action="/" method="POST">
     <p><b>Create new thread</b></p>
-    <input type="text" name="name">
+    <p><input type="text" name="name" placeholder="Subject"></p>
+    <p><input type="text" name="des" placeholder="Description"></p>
     <button class="button">Create</button>
 </form>
 <p></p>
 {% endif %}
 
-<p>Today is: <span id="datetime"></span></p><script>var dt = new Date();
-    document.getElementById("datetime").innerHTML=dt.toLocaleString();</script>
+<p>Today is: <span id="datetime"></span></p> <script>var dt = new Date(); document.getElementById("datetime").innerHTML=dt.toLocaleString();</script>
 <br>
 </div>
 <br>
