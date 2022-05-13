@@ -19,3 +19,10 @@ def remove_subthread(subthread_id):
     sql = "UPDATE subthreads SET visible=0 WHERE id=:subthread_id"
     db.session.execute(sql, {"subthread_id":subthread_id})
     db.session.commit()    
+
+def get_subthread(subthread_id):
+    sql = "SELECT s.id, s.name, s.content, s.thread_id, s.user_id, users.username FROM subthreads s INNER JOIN users ON s.user_id = users.id INNER JOIN threads ON s.thread_id = threads.id "\
+          "WHERE s.id=:subthread_id AND s.visible = 1"
+    return db.session.execute(sql, {"subthread_id": subthread_id}).fetchone()    
+
+    

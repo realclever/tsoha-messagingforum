@@ -39,6 +39,11 @@ def thread(id):
     else:
         return render_template("error.html", message="Something went wrong")
 
+@app.route("/subthread/<int:id>", methods=["GET"])
+def subthread(id):
+    subthread = subthreads.get_subthread(id)
+    return render_template("subthread.html", subthreads=subthread)
+
 @app.route("/remove_subthread", methods=["POST"])   
 def remove_subthread():
     

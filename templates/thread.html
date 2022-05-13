@@ -10,13 +10,13 @@
         {% if session.user_id == subthread.user_id or session.user_role == 2 %}
         <form action="/remove_subthread" method="POST">
             <hr>
-            <a href="/subthread/{{subthread.id}}"><li><h4>{{subthread.name}}<hr><input type="submit" value="Remove"></li></h4></a> 
+            <a href="/subthread/{{subthread.id}}"><li><h4><img src="https://www.iconexperience.com/_img/o_collection_png/green_dark_grey/24x24/plain/message.png">&nbsp;{{subthread.name}}<hr><input type="submit" value="Remove"></li></h4></a> 
             
             <input type="hidden" name="subthread_id" value="{{subthread.id}}">
         </form>
         {% else %}
         <hr>
-        <a href="/subthread/{{subthread.id}}"><li><h4>{{subthread.name}}</li></h4></a>
+        <a href="/subthread/{{subthread.id}}"><li><h4><img src="https://www.iconexperience.com/_img/o_collection_png/green_dark_grey/24x24/plain/message.png">&nbsp;{{subthread.name}}</li></h4></a>
         <hr>
         {% endif %}
         {% endfor %}
