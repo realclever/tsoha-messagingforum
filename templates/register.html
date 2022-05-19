@@ -5,7 +5,7 @@
 {% block content %}
 
 <hr> <h3>Sign up</h3> <hr>
-<div>
+<div class="center">
 <form action="/register" method="post">
     Username: <input type="text" name="username" minlength="1" maxlength="20">
     <p>
@@ -21,6 +21,6 @@
     <p>
     <input type="submit" value="Create account">
     </form>
-    </div>
     <button onclick="location.href='/login'">Return to login</button>
+    </div>
     {% endblock %}

@@ -1,8 +1,9 @@
 from app import app
-from flask import render_template, request, redirect
+from flask import flash, render_template, request, redirect
 import users
 import threads
 import subthreads
+import messages
 from db import db
 
 @app.route("/", methods=["GET", "POST"])
@@ -18,7 +19,7 @@ def index():
         name = request.form["name"]
         des = request.form["des"]
     if threads.create_thread(name, des):
-        return redirect("/")
+        return redirect(request.referrer)
     else:
         return render_template("error.html", message="Something went wrong") 
 
@@ -35,14 +36,25 @@ def thread(id):
         name = request.form["name"]
         content = request.form["content"]
     if subthreads.create_subthread(name, content, id):
-        return redirect("/")
+        return redirect(request.referrer)
     else:
         return render_template("error.html", message="Something went wrong")
 
-@app.route("/subthread/<int:id>", methods=["GET"])
+@app.route("/subthread/<int:id>", methods=["GET", "POST"])
 def subthread(id):
     subthread = subthreads.get_subthread(id)
-    return render_template("subthread.html", subthreads=subthread)
+    message = messages.get_messages(id)
+
+    if request.method == "GET":
+        return render_template("subthread.html", subthreads=subthread, messages=message)
+
+    if request.method == "POST":
+        users.require_role(1)
+        content = request.form["content"]
+    if messages.create_message(content, id):
+        return redirect(request.referrer)
+    else:
+        return render_template("error.html", message="Something went wrong")    
 
 @app.route("/remove_subthread", methods=["POST"])   
 def remove_subthread():
@@ -50,7 +62,7 @@ def remove_subthread():
     if "subthread_id" in request.form:
         subthread_id = request.form["subthread_id"]
         subthreads.remove_subthread(subthread_id)
-    return redirect("/")
+    return redirect(request.referrer)
 
 @app.route("/remove_thread", methods=["POST"])   
 def remove_thread():
@@ -61,7 +73,6 @@ def remove_thread():
         threads.remove_thread(thread_id)
     return redirect("/")
 
-      
 @app.route("/login", methods=["GET", "POST"])
 def login():
     if request.method == "GET":
@@ -105,4 +116,3 @@ def register():
         if not users.register(username, password1, role):
             return render_template("error.html", message="Something went wrong, try again.")
         return redirect("/")
-

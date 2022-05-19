@@ -4,7 +4,11 @@ body {
   font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
   color: #444;
 }
-    
+
+.center {
+  text-align: center;
+}
+
 header {
   background-color: #dfb887;
   height: 35px;
@@ -54,7 +58,7 @@ h3 {
   text-align: center;
   letter-spacing: -2px;
   color: rgb(0, 0, 0);
-  font-weight: 350;
+  font-weight: 400;
 }
 .menu {
   float: left;
