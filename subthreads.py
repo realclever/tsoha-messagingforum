@@ -26,4 +26,8 @@ def remove_subthread(subthread_id):
     sql = "UPDATE subthreads SET visible=0 WHERE id=:subthread_id"
     db.session.execute(sql, {"subthread_id":subthread_id})
     db.session.commit()
+
+def subthreads_count(): 
+    sql = "SELECT COUNT(*) FROM subthreads WHERE visible=1"
+    return db.session.execute(sql).fetchone()    
   

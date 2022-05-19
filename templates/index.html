@@ -26,6 +26,12 @@
     {% endif %}
     {% endfor %}
 
+    <h2>Forum Statistics</h2> 
+    <div class="center">
+    <hr> <p><b> Total threads: {{subthreads.count}} &nbsp; Total messages: {{messages.count}} </b></p> <hr>
+    </div>
+</ul>    
+
 {% if session.user_role == 2 %}
 <form class="form" action="/" method="POST">
     <p><b>Create new thread</b></p>

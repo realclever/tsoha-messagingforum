@@ -9,9 +9,11 @@ from db import db
 @app.route("/", methods=["GET", "POST"])
 def index():
     thread = threads.get_threads()
+    count = subthreads.subthreads_count()
+    kauant = messages.messages_count()
 
     if request.method == "GET":
-        return render_template("index.html", threads=thread)
+        return render_template("index.html", threads=thread, subthreads=count, messages=kauant)
 
     if request.method == "POST":
         users.require_role(2)
