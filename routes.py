@@ -75,6 +75,14 @@ def remove_thread():
         threads.remove_thread(thread_id)
     return redirect("/")
 
+@app.route("/remove_message", methods=["POST"])   
+def remove_message():
+    
+    if "message_id" in request.form:
+        message_id = request.form["message_id"]
+        messages.remove_message(message_id)
+    return redirect(request.referrer)   
+
 @app.route("/login", methods=["GET", "POST"])
 def login():
     if request.method == "GET":

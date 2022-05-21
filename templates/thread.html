@@ -4,23 +4,32 @@
 <hr> <h3>{{thread.name}}</h3> <hr>
 
 <div class="container">
-    <ul style="list-style-type:none;">
-        <h2>Discussions</h2>
-        {% for subthread in subthreads %}
-        {% if session.user_id == subthread.user_id or session.user_role == 2 %}
+{% if not subthreads %}
+<div class="center"><h4>Nothing here yet</h4> </div>
+{% else %}
 
-        <form action="/remove_subthread" method="POST">
-            <hr><a href="/subthread/{{subthread.id}}"><li><h4><img src="https://www.iconexperience.com/_img/o_collection_png/green_dark_grey/24x24/plain/message.png">&nbsp;{{subthread.name}}
-            <input type="submit" value="Remove">
-            <input type="hidden" name="subthread_id" value="{{subthread.id}}">
-            <hr>
+<ul style="list-style-type:none;">
+    <h2>Discussions</h2>
+    {% for subthread in subthreads %}
+    {% if session.user_id == subthread.user_id or session.user_role == 2 %}
+
+    <form action="/remove_subthread" method="POST">
+        <hr><a href="/subthread/{{subthread.id}}"><li><h4><img src="https://www.iconexperience.com/_img/o_collection_png/green_dark_grey/24x24/plain/message.png">&nbsp;{{subthread.name}}
+        <input type="submit" value="Remove">
+        <input type="hidden" name="subthread_id" value="{{subthread.id}}">
+        <br>
+        <small>Replies: {{subthread[5]}} &nbsp; Last reply: {{subthread[4]}} </small>
+        <hr>
         </form>
         {% else %}
-        <hr><a href="/subthread/{{subthread.id}}"><li><h4><img src="https://www.iconexperience.com/_img/o_collection_png/green_dark_grey/24x24/plain/message.png">&nbsp;{{subthread.name}}</li></h4></a><hr>
+        <hr><a href="/subthread/{{subthread.id}}"><li><h4><img src="https://www.iconexperience.com/_img/o_collection_png/green_dark_grey/24x24/plain/message.png">&nbsp;{{subthread.name}}</li></h4></a>
+        <small>Replies: {{subthread[5]}} &nbsp; Last reply: {{subthread[4]}} </small>
+        <hr>
         {% endif %}
         {% endfor %}
     </ul>
-
+    {% endif %}
+    
 
 {% if session.user_role == 1 or session.user_role == 2 %}
 <form class="form" action="/thread/{{thread.id}}" method="POST">

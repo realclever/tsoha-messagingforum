@@ -14,13 +14,14 @@
 <ul style="list-style-type:none;">
     <h2>Forums</h2> 
     {% for thread in threads %} 
-    
-    <hr><li><h4><img src="https://www.iconexperience.com/_img/o_collection_png/green_dark_grey/24x24/plain/message.png">&nbsp;<a href="/thread/{{thread.id}}">{{thread.name}}</a></h4>{{thread.des}}</li>
+    <hr>
+    <li><h4><img src="https://www.iconexperience.com/_img/o_collection_png/green_dark_grey/24x24/plain/message.png">&nbsp;<a href="/thread/{{thread.id}}">{{thread.name}}</a></h4>{{thread.des}}</li>
     <br>
+    <small> Active threads: {{thread[4]}} &nbsp; Replies: {{thread[5]}} &nbsp; Latest reply: {{thread[6]}}</small>
     {% if session.user_role == 2 %}
     <form action="/remove_thread" method="POST">
-        <input type="submit" value="Remove"> 
-        <input type="hidden" name="thread_id" value="{{thread.id}}">
+    <input type="submit" value="Remove"> 
+    <input type="hidden" name="thread_id" value="{{thread.id}}">
     </form>
     <hr>
     {% endif %}
@@ -28,7 +29,7 @@
 
     <h2>Forum Statistics</h2> 
     <div class="center">
-    <hr> <p><b> Total threads: {{subthreads.count}} &nbsp; Total messages: {{messages.count}} </b></p> <hr>
+    <hr> <p><b> Total active threads: {{subthreads.count}} &nbsp; Total messages: {{messages.count}} </b></p> <hr>
     </div>
 </ul>    
 

@@ -1,12 +1,19 @@
 from db import db
 import users
 
-def get_threads(): 
-    sql = "SELECT id, name, des, created_at FROM threads WHERE visible=1 ORDER BY name"
-    return db.session.execute(sql).fetchall()
+def get_threads():
+    sql = '''SELECT id, name, des, created_at, 
+    (SELECT COUNT(s.id) FROM subthreads s WHERE threads.id = s.thread_id AND s.visible = 1),
+    (SELECT COUNT(m.id) FROM messages m, subthreads s  
+    WHERE s.id = m.subthread_id AND threads.id = s.thread_id AND s.visible = 1 AND m.visible = 1),
+    (SELECT TO_CHAR(m.created_at, 'HH12:MI AM MON DD') FROM messages m INNER JOIN subthreads s ON s.id = m.subthread_id 
+    WHERE threads.id = s.thread_id AND s.visible = 1 AND m.visible = 1 
+    ORDER BY m.created_at DESC LIMIT 1)
+    FROM threads WHERE visible = 1 ORDER BY name'''
+    return db.session.execute(sql, {}).fetchall()    
 
 def get_thread(thread_id):
-    sql = "SELECT id, name, des FROM threads WHERE visible=1 AND id=:thread_id"
+    sql = "SELECT id, name, des FROM threads WHERE id=:thread_id AND visible = 1"
     return db.session.execute(sql, {"thread_id": thread_id}).fetchone()        
 
 def create_thread(name, des): 

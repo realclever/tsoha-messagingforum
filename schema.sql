@@ -19,6 +19,7 @@ CREATE TABLE subthreads (
     content TEXT,
     thread_id INTEGER REFERENCES threads,
     user_id INTEGER REFERENCES users,
+    created_at TIMESTAMP,
     visible INTEGER
 );
 

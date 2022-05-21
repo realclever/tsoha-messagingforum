@@ -5,10 +5,17 @@
 
 <div class="container">
     <ul style="list-style-type:none;">
-        <hr><p><b>{{subthreads.username}} (OP)</b> <br><br> {{subthreads.content}}</p><hr>
+        <hr><p> <b>{{subthreads.username}} (OP)</b> <br><small>Posted: {{subthreads.created_at.strftime("%I:%M %p %B %d")}}</small> <br><br>{{subthreads.content}}</p><hr>
+
         {% for message in messages %}
         {% if session.user_id == message.user_id or session.user_role == 2 %}
-        <hr><p> <b>{{message.username}} #{{message.id}}</b> <br>Replied: {{message.created_at.strftime("%H:%M %B %d")}} <br><br>{{message.content}}</p><hr>
+        <form action="/remove_message" method="POST">
+            <hr><p> <b>{{message.username}}</b> <br><small>Posted: {{message.created_at.strftime("%I:%M %p %B %d")}}</small><br><br>{{message.content}}</p><hr>
+            <input type="submit" value="Remove">
+            <input type="hidden" name="message_id" value="{{message.id}}">
+        </form>
+        {% else %}
+        <hr><p> <b>{{message.username}}</b> <br><small>Posted: {{ message.created_at.strftime("%I:%M %p %B %d")}}</small> <br><br>{{message.content}}</p><hr>
         {% endif %}
         {% endfor %}
     </ul>
