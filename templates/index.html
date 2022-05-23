@@ -1,47 +1,70 @@
-<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
-<link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='styles/mainpage.css') }}">
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"/>
+<link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='styles/mainpage.css') }}" />
 
-{% extends "layout.html" %}
-{% block title %} Main {% endblock %}
-{% block content %}
-<hr> <h3>Welcome to Discussion forum!</h3> <hr>
+{% extends "layout.html" %} {% block title %} Main {% endblock %} {% block
+content %}
+<hr />
+<h3>Welcome to Discussion Forum!</h3>
+<hr />
 
 <div class="container">
-{% if not threads %}
-<div><h4>Nothing here yet</h4> </div>
-{% endif %}
+  {% if not threads %}
+  <div><h4>Nothing here yet</h4></div>
+  {% endif %}
 
-<ul style="list-style-type:none;">
-    <h2>Forums</h2> 
-    {% for thread in threads %} 
-    <hr>
-    <li><h4><img src="https://www.iconexperience.com/_img/o_collection_png/green_dark_grey/24x24/plain/message.png">&nbsp;<a href="/thread/{{thread.id}}">{{thread.name}}</a></h4>{{thread.des}}</li>
-    <br>
-    <small> Active threads: {{thread[4]}} &nbsp; Replies: {{thread[5]}} &nbsp; Latest reply: {{thread[6]}}</small>
+  <ul style="list-style-type: none">
+    <h2>Forums</h2>
+    {% for thread in threads %}
+    <hr />
+    <li>
+      <h4><a href="/thread/{{thread.id}}">{{thread.name}}</a></h4>
+      {{thread.des}}
+    </li>
+    <br />
+    <small>
+      Active threads: {{thread[4]}} &nbsp; Replies: {{thread[5]}} &nbsp; Latest
+      reply: {{thread[6]}}</small
+    >
+
     {% if session.user_role == 2 %}
-    <form action="/remove_thread" method="POST">
-    <input type="submit" value="Remove"> 
-    <input type="hidden" name="thread_id" value="{{thread.id}}">
+    <form
+      action="/remove_thread"
+      onSubmit="return confirm('Are you sure you wish to remove {{thread.name}}?');"
+      method="POST"
+    >
+      <input type="submit" value="Remove" />
+      <input type="hidden" name="thread_id" value="{{thread.id}}" />
     </form>
-    <hr>
-    {% endif %}
-    {% endfor %}
+    <hr />
+    {% endif %} {% endfor %}
 
-    <h2>Forum Statistics</h2> 
     <div class="center">
-    <hr> <p><b> Total active threads: {{subthreads.count}} &nbsp; Total messages: {{messages.count}} </b></p> <hr>
+      {% if session.user_role == 2 %}
+      <form class="form" action="/" method="POST">
+        <p><b>Create new thread</b></p>
+        <p><input type="text" name="name" placeholder="Subject" /></p>
+        <p><input type="text" name="des" placeholder="Description" /></p>
+        <button class="button">Create</button>
+      </form>
+      <br />
+      {% endif %}
     </div>
-</ul>    
 
-{% if session.user_role == 2 %}
-<form class="form" action="/" method="POST">
-    <p><b>Create new thread</b></p>
-    <p><input type="text" name="name" placeholder="Subject"></p>
-    <p><input type="text" name="des" placeholder="Description"></p>
-    <button class="button">Create</button>
-</form>
-<p></p>
-{% endif %}
-
+    <hr />
+    <h2>Forum Statistics</h2>
+    <div class="center">
+      <p>
+        <b>
+          Total active threads: {{subthreads.count}} &nbsp; Total messages:
+          {{messages.count}}
+        </b>
+      </p>
+      <hr />
+    </div>
+  </ul>
+  <br />
+  <footer>
+    <p class="center">Copyright &copy; Discussion Forum 2022</p>
+  </footer>
 </div>
 {% endblock %}

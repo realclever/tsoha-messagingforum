@@ -1,10 +1,11 @@
 from app import app
-from flask import flash, render_template, request, redirect
+from flask import flash, render_template, request, redirect, url_for
 import users
 import threads
 import subthreads
 import messages
 from db import db
+
 
 @app.route("/", methods=["GET", "POST"])
 def index():
@@ -23,7 +24,8 @@ def index():
     if threads.create_thread(name, des):
         return redirect(request.referrer)
     else:
-        return render_template("error.html", message="Something went wrong") 
+        return render_template("error.html", message="Something went wrong")
+
 
 @app.route("/thread/<int:id>", methods=["GET", "POST"])
 def thread(id):
@@ -42,6 +44,7 @@ def thread(id):
     else:
         return render_template("error.html", message="Something went wrong")
 
+
 @app.route("/subthread/<int:id>", methods=["GET", "POST"])
 def subthread(id):
     subthread = subthreads.get_subthread(id)
@@ -56,32 +59,52 @@ def subthread(id):
     if messages.create_message(content, id):
         return redirect(request.referrer)
     else:
-        return render_template("error.html", message="Something went wrong")    
+        return render_template("error.html", message="Something went wrong")
 
-@app.route("/remove_subthread", methods=["POST"])   
+
+@app.route("/remove_subthread", methods=["POST"])
 def remove_subthread():
-    
+
     if "subthread_id" in request.form:
         subthread_id = request.form["subthread_id"]
         subthreads.remove_subthread(subthread_id)
     return redirect(request.referrer)
 
-@app.route("/remove_thread", methods=["POST"])   
+
+@app.route("/remove_thread", methods=["POST"])
 def remove_thread():
     users.require_role(2)
-    
+
     if "thread_id" in request.form:
         thread_id = request.form["thread_id"]
         threads.remove_thread(thread_id)
     return redirect("/")
 
-@app.route("/remove_message", methods=["POST"])   
+
+@app.route("/remove_message", methods=["POST"])
 def remove_message():
-    
+
     if "message_id" in request.form:
         message_id = request.form["message_id"]
         messages.remove_message(message_id)
-    return redirect(request.referrer)   
+    return redirect(request.referrer)
+
+
+@app.route('/edit_subthread/<int:id>', methods=["GET", "POST"])
+def edit_subthread(id):
+    subthread = subthreads.get_subthread(id)
+
+    if request.method == "GET":
+        return render_template("subthread_update.html", subthreads=subthread)
+
+    if request.method == "POST":
+        if "subthread_id" in request.form:
+            content = request.form["content"]
+            subthread_id = request.form["subthread_id"]
+        subthreads.edit_subthread(content, subthread_id)
+
+    return redirect(request.referrer)
+
 
 @app.route("/login", methods=["GET", "POST"])
 def login():
@@ -91,15 +114,17 @@ def login():
     if request.method == "POST":
         username = request.form["username"]
         password = request.form["password"]
-        
+
         if not users.login(username, password):
             return render_template("error.html", message="Invalid username or password.")
-        return redirect("/")    
+        return redirect("/")
+
 
 @app.route("/logout")
 def logout():
     users.logout()
     return redirect("/")
+
 
 @app.route("/register", methods=["GET", "POST"])
 def register():
@@ -110,7 +135,7 @@ def register():
         username = request.form["username"]
         if len(username) < 1 or len(username) > 20:
             return render_template("error.html", message="Tunnuksessa tulee olla 1-20 merkkiä")
-            
+
         password1 = request.form["password1"]
         password2 = request.form["password2"]
         if password1 != password2:
