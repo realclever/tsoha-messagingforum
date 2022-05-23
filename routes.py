@@ -106,6 +106,23 @@ def edit_subthread(id):
     return redirect(request.referrer)
 
 
+@app.route('/subthread/<int:s_id>/edit_message/<int:id>', methods=["GET", "POST"])
+def edit_message(id, s_id):
+    subthread = subthreads.get_subthread(s_id)
+    message = messages.get_message(id)
+
+    if request.method == "GET":
+        return render_template("message_update.html", subthreads=subthread, messages=message)
+
+    if request.method == "POST":
+        if "message_id" in request.form:
+            content = request.form["content"]
+            message_id = request.form["message_id"]
+        messages.edit_message(content, message_id)
+
+    return redirect(request.referrer)    
+
+
 @app.route("/login", methods=["GET", "POST"])
 def login():
     if request.method == "GET":

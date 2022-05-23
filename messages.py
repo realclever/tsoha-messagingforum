@@ -9,6 +9,14 @@ def get_messages(subthread_id):
     return db.session.execute(sql, {"subthread_id": subthread_id}).fetchall()
 
 
+def get_message(message_id):
+    sql = "SELECT m.id, m.content, m.subthread_id, m.user_id, m.created_at, u.username FROM messages m "\
+        "INNER JOIN users u ON m.user_id = u.id "\
+        "INNER JOIN subthreads ON m.subthread_id = subthreads.id "\
+        "WHERE m.id=:message_id AND m.visible = 1"
+    return db.session.execute(sql, {"message_id": message_id}).fetchone()
+
+    
 def create_message(content, subthread_id):
     user_id = users.user_id()
     if user_id == 0:
