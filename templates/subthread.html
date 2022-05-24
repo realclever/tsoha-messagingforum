@@ -1,37 +1,57 @@
 {% extends "layout.html" %}
 {% block title %} subthread {% endblock %}
 {% block content %}
-<hr> <h3>{{subthreads.name}}</h3> <hr>
+<hr>
+<h3>{{subthreads.name}}</h3>
+<hr>
 
 <div class="container">
     <ul style="list-style-type:none;">
-        <hr><p> <b>{{subthreads.username}} (OP)</b> <br><small>Posted: {{subthreads.created_at.strftime("%I:%M %p %B %d")}}</small> <br><br>{{subthreads.content}}</p><hr>
+        <h2>Comments</h2>
+        <hr>
+        <p> <b>{{subthreads.username}} (OP)</b> <br><small>Posted:
+                {{subthreads.created_at.strftime("%I:%M %p %B %d")}}</small> <br><br>{{subthreads.content}}</p>
+        <hr>
         {% if session.user_id == subthreads.user_id or session.user_role == 2 %}
         <a href="/edit_subthread/{{subthreads.id}}"><small>Edit message</small></a>
         {% endif %}
 
         {% for message in messages %}
         {% if session.user_id == message.user_id or session.user_role == 2 %}
-        <form action="/remove_message" onSubmit="return confirm('Are you sure you wish to remove the message {{message.content}} ?');" method="POST">
-            <hr><p> <b>{{message.username}}</b> <br><small>Posted: {{message.created_at.strftime("%I:%M %p %B %d")}}</small><br><br>{{message.content}}</p><hr>
+        <form action="/remove_message"
+            onSubmit="return confirm('Are you sure you wish to remove the message {{message.content}} ?');"
+            method="POST">
+            <hr>
+            <p> <b>{{message.username}}</b> <br><small>Posted:
+                    {{message.created_at.strftime("%I:%M %p %B %d")}}</small><br><br>{{message.content}}</p>
+            <hr>
             <a href="/subthread/{{subthreads.id}}/edit_message/{{message.id}}"><small>Edit message</small></a>
             <input type="submit" value="Remove">
             <input type="hidden" name="message_id" value="{{message.id}}">
         </form>
         {% else %}
-        <hr><p> <b>{{message.username}}</b> <br><small>Posted: {{ message.created_at.strftime("%I:%M %p %B %d")}}</small> <br><br>{{message.content}}</p><hr>
+        <hr>
+        <p> <b>{{message.username}}</b> <br><small>Posted: {{ message.created_at.strftime("%I:%M %p %B %d")}}</small>
+            <br><br>{{message.content}}</p>
+        <hr>
         {% endif %}
         {% endfor %}
     </ul>
 
-<br>    
-<div class="center">    
-{% if session.user_role == 1 or session.user_role == 2 %}
-<form class="form" action="/subthread/{{subthreads.id}}" method="POST">
-    <p><input type="text" id="message" name="content" placeholder="Reply to this conversation"></textarea></p>
-    <button class="button">Submit reply</button>
-</form>
-{% endif %}
-</div>
+    <br>
+    <div class="center">
+        {% if session.user_role == 1 or session.user_role == 2 %}
+        <form class="form" action="/subthread/{{subthreads.id}}" method="POST">
+            <p><input type="text" id="message" name="content" placeholder="Reply to this conversation"></textarea></p>
+            <button class="button">Submit reply</button>
+        </form>
+        {% else %}
+        <h5><a href="/login">Log in</a> to join the conversation</h5>
+        <button onclick="history.back()">
+            Return
+          </button>
+        {% endif %}
 
-{% endblock %}
+    </div>
+
+    {% endblock %}

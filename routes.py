@@ -120,7 +120,7 @@ def edit_message(id, s_id):
             message_id = request.form["message_id"]
         messages.edit_message(content, message_id)
 
-    return redirect(request.referrer)    
+    return redirect(request.referrer)
 
 
 @app.route("/login", methods=["GET", "POST"])

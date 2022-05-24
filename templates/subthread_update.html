@@ -1,19 +1,22 @@
-{% extends "layout.html" %}
-{% block title %} Main {% endblock %}
-{% block content %}
-<hr> <h3>Edit message</h3> <hr>
+{% extends "layout.html" %} {% block title %} Main {% endblock %} {% block
+content %}
+<hr />
+<h3>Edit message</h3>
+<hr />
 
 <div class="container">
-<div class="center">
-<form action="/edit_subthread/{{subthreads.id}}" class="center" method="POST">
-    <textarea name="content" rows="4" cols="50"> {{subthreads.content}} </textarea>
-    <br><br>
-    <input type="submit" name="edit" value="Update">
-    <input type="hidden" name="subthread_id" value="{{subthreads.id}}">
-</form>
-
-<button onclick="location.href='/subthread/{{subthreads.id}}'">Return</button>
-</div>
+  <div class="center">
+    <form action="/edit_subthread/{{subthreads.id}}" class="center" method="POST">
+      <textarea name="content" rows="4" cols="50">
+ {{subthreads.content}} </textarea>
+      <br /><br />
+      <input type="submit" name="edit" value="Update" />
+      <input type="hidden" name="subthread_id" value="{{subthreads.id}}" />
+    </form>
+    <button onclick="location.href='/subthread/{{subthreads.id}}'">
+      Return
+    </button>
+  </div>
 </div>
 
 {% endblock %}
