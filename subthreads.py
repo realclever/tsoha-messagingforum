@@ -38,7 +38,9 @@ def remove_subthread(subthread_id):
 
 
 def subthreads_count():
-    sql = "SELECT COUNT(*) FROM subthreads WHERE visible = 1"
+    sql = "SELECT COUNT(*) FROM subthreads s "\
+        "INNER JOIN threads t ON s.thread_id = t.id "\
+        "WHERE s.visible = 1 AND t.visible = 1"
     return db.session.execute(sql).fetchone()
 
 

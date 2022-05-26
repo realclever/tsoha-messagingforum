@@ -24,7 +24,7 @@ def index():
     if len(name) < 3 or len(name) > 20:
         return render_template("error.html", message="Subject should be 3-20 characters.")
     if len(des) < 10 or len(des) > 500:
-        return render_template("error.html", message="Description should be 10-500 characters.")    
+        return render_template("error.html", message="Description should be 10-500 characters.")
     if threads.create_thread(name, des):
         return redirect(request.referrer)
     else:
@@ -65,7 +65,7 @@ def subthread(id):
         users.require_role(1)
         content = request.form["content"]
     if len(content) < 1 or len(content) > 800:
-        return render_template("error.html", message="Reply should be 1-800 characters.")    
+        return render_template("error.html", message="Reply should be 1-800 characters.")
     if messages.create_message(content, id):
         return redirect(request.referrer)
     else:
@@ -112,11 +112,11 @@ def edit_subthread(id):
             content = request.form["content"]
             subthread_id = request.form["subthread_id"]
         if len(content) < 1 or len(content) > 800:
-            return render_template("error.html", message="Reply should be 1-800 characters.")   
+            return render_template("error.html", message="Reply should be 1-800 characters.")
         subthreads.edit_subthread(content, subthread_id)
-        
+
     return redirect(request.referrer)
-            
+
 
 @app.route('/subthread/<int:s_id>/edit_message/<int:id>', methods=["GET", "POST"])
 def edit_message(id, s_id):
@@ -131,7 +131,7 @@ def edit_message(id, s_id):
             content = request.form["content"]
             message_id = request.form["message_id"]
         if len(content) < 1 or len(content) > 800:
-            return render_template("error.html", message="Reply should be 1-800 characters.")    
+            return render_template("error.html", message="Reply should be 1-800 characters.")
         messages.edit_message(content, message_id)
 
     return redirect(request.referrer)

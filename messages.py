@@ -16,7 +16,7 @@ def get_message(message_id):
         "WHERE m.id=:message_id AND m.visible = 1"
     return db.session.execute(sql, {"message_id": message_id}).fetchone()
 
-    
+
 def create_message(content, subthread_id):
     user_id = users.user_id()
     if user_id == 0:
@@ -36,7 +36,17 @@ def remove_message(message_id):
 
 
 def messages_count():
-    sql = "SELECT COUNT(*) FROM messages WHERE visible = 1"
+    sql = "SELECT COUNT(*) FROM messages m "\
+        "INNER JOIN subthreads s ON m.subthread_id = s.id "\
+        "INNER JOIN threads t ON s.thread_id = t.id "\
+        "WHERE m.visible = 1 AND s.visible = 1 AND t.visible = 1"
+    return db.session.execute(sql).fetchone()
+
+
+def subthreads_count():
+    sql = "SELECT COUNT(*) FROM subthreads s "\
+        "INNER JOIN threads t ON s.thread_id = t.id "\
+        "WHERE s.visible = 1 AND t.visible = 1"
     return db.session.execute(sql).fetchone()
 
 
