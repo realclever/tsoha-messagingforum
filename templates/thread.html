@@ -19,14 +19,9 @@
         {% for subthread in subthreads %}
         {% if session.user_id == subthread.user_id or session.user_role == 2 %}
 
-        <form action="/remove_subthread"
+        <form action="/remove_subthread" class="sremove"
             onSubmit="return confirm('Are you sure you wish to remove {{subthread.name}}?');" method="POST">
-            <hr><a href="/subthread/{{subthread.id}}">
-                <li>
-                    <h4>{{subthread.name}}
-                </li>
-                </h4>
-            </a>
+            <hr><a href="/subthread/{{subthread.id}}"><li><h4>{{subthread.name}}</li></h4></a>
             <small>{{subthread[2]}}</small>
             <br><br>
             <small>Replies: {{subthread[6]}}&nbsp;Last reply: {{subthread[5]}}</small>
@@ -34,6 +29,7 @@
             <hr>
             <input type="submit" value="Remove">
             <input type="hidden" name="subthread_id" value="{{subthread.id}}">
+            <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
         </form>
         {% else %}
         <hr><a href="/subthread/{{subthread.id}}">
@@ -58,6 +54,7 @@
             <p><input type="text" name="name" placeholder="Subject"></p>
             <p><input type="text" name="content" placeholder="Description"></textarea></p>
             <button class="button">Create</button>
+            <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
         </form>
         {% else %}
         <br>

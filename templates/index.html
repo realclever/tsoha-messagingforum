@@ -27,13 +27,14 @@ content %}
       Active threads: {{thread[4]}} &nbsp; Replies: {{thread[5]}} &nbsp; Latest
       reply: {{thread[6]}}</small>
 
+    <hr />
     {% if session.user_role == 2 %}
-    <form action="/remove_thread" onSubmit="return confirm('Are you sure you wish to remove {{thread.name}}?');"
-      method="POST">
+    <form action="/remove_thread" class="sremove"
+      onSubmit="return confirm('Are you sure you wish to remove {{thread.name}}?');" method="POST">
       <input type="submit" value="Remove" />
       <input type="hidden" name="thread_id" value="{{thread.id}}" />
+      <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
     </form>
-    <hr />
     {% endif %} {% endfor %}
 
     <div class="center">
@@ -43,6 +44,7 @@ content %}
         <p><input type="text" name="name" placeholder="Subject" /></p>
         <p><input type="text" name="des" placeholder="Description" /></p>
         <button class="button">Create</button>
+        <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
       </form>
       <br />
       {% endif %}
@@ -63,8 +65,9 @@ content %}
   <br />
   <footer>
     <div class="center">
-    <small >Copyright &copy; Discussion Forum 2022</small>
-  </div>
+      <small>Copyright &copy; Discussion Forum 2022</small>
+    </div>
+    <br>
   </footer>
 </div>
 {% endblock %}

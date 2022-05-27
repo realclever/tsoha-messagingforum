@@ -17,6 +17,7 @@ content %}
       <br /><br />
       <input type="submit" name="edit" value="Update" />
       <input type="hidden" name="message_id" value="{{messages.id}}" />
+      <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
     </form>
     <button onclick="location.href='/subthread/{{subthreads.id}}'">
       Return

@@ -17,6 +17,7 @@ def index():
         return render_template("index.html", threads=thread, subthreads=count, messages=kauant)
 
     if request.method == "POST":
+        users.check_csrf()
         users.require_role(2)
 
         name = request.form["name"]
@@ -40,7 +41,9 @@ def thread(id):
         return render_template("thread.html", thread=thread, subthreads=subthread)
 
     if request.method == "POST":
+        users.check_csrf()
         users.require_role(1)
+
         name = request.form["name"]
         content = request.form["content"]
     if len(name) < 3 or len(name) > 50:
@@ -62,7 +65,9 @@ def subthread(id):
         return render_template("subthread.html", subthreads=subthread, messages=message)
 
     if request.method == "POST":
+        users.check_csrf()
         users.require_role(1)
+
         content = request.form["content"]
     if len(content) < 1 or len(content) > 800:
         return render_template("error.html", message="Reply should be 1-800 characters.")
@@ -74,6 +79,7 @@ def subthread(id):
 
 @app.route("/remove_subthread", methods=["POST"])
 def remove_subthread():
+    users.check_csrf()
 
     if "subthread_id" in request.form:
         subthread_id = request.form["subthread_id"]
@@ -83,6 +89,7 @@ def remove_subthread():
 
 @app.route("/remove_thread", methods=["POST"])
 def remove_thread():
+    users.check_csrf()
     users.require_role(2)
 
     if "thread_id" in request.form:
@@ -93,6 +100,7 @@ def remove_thread():
 
 @app.route("/remove_message", methods=["POST"])
 def remove_message():
+    users.check_csrf()
 
     if "message_id" in request.form:
         message_id = request.form["message_id"]
@@ -108,6 +116,8 @@ def edit_subthread(id):
         return render_template("subthread_update.html", subthreads=subthread)
 
     if request.method == "POST":
+        users.check_csrf()
+
         if "subthread_id" in request.form:
             content = request.form["content"]
             subthread_id = request.form["subthread_id"]
@@ -127,6 +137,8 @@ def edit_message(id, s_id):
         return render_template("message_update.html", subthreads=subthread, messages=message)
 
     if request.method == "POST":
+        users.check_csrf()
+
         if "message_id" in request.form:
             content = request.form["content"]
             message_id = request.form["message_id"]
@@ -186,6 +198,8 @@ def register():
 
 @app.route("/search", methods=["POST"])
 def search():
+    users.check_csrf()
+    
     if "message" in request.form:
         message = request.form["message"]
     if message == "":
