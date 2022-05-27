@@ -1,0 +1,24 @@
+{% extends "layout.html" %} {% block title %} Main {% endblock %} {% block
+    content %}
+<hr />
+<h3>Search the Forum</h3>
+<hr />
+
+<div class="container">
+    <div class="center">
+        <h5>Found {{len}} result(s) with keyword "{{message}}" </h5>
+        {% for msg in msgs %}
+        <ul style="list-style-type:none;">
+            <hr>
+            <li><a href="/subthread/{{msg[2]}}"><b>
+                        <h3>{{msg[3]}}</h3>
+                    </b> "{{msg[1]}}" <br> <small>Posted: {{msg[4].strftime("%I:%M %p %B %d")}}</small></a></li>
+            <hr>
+        </ul>
+        {% endfor %}
+        <br>
+        <button onclick="location.href='/'">Return</button>
+    </div>
+</div>
+
+{% endblock %}

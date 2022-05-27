@@ -1,7 +1,7 @@
 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" />
 <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='styles/mainpage.css') }}" />
 
-<div class="top">
+<div>
   <h2>
     <img
       src="https://www.iconexperience.com/_img/o_collection_png/green_dark_grey/48x48/plain/user_message.png" /><strong>
@@ -15,6 +15,10 @@
   <button onclick="location.href='/register'">Sign up</button>
   <button onclick="location.href='/login'">Log in</button>
   {% endif %}
+  <form action="/search", class="search" method="POST">
+    <input type="text" name="message">
+    <button>Search</button>
+</form>
 </div>
 
 {% block content %} {% endblock %}

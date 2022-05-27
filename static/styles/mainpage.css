@@ -113,11 +113,6 @@ a:active {
   text-decoration: none;
 }
 
-div.top {
-  border-top-style: solid;
-  border-color: rgb(0, 0, 0);
-  border-width: 1px;
-}
 
 button, input[type="submit"] {
   font-size: .8rem;
@@ -168,4 +163,9 @@ textarea {
 label {
     display: block;
     margin-bottom: 10px;
+}
+
+.search {
+width: 17%;
+margin-top: 10px;
 }

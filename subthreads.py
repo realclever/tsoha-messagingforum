@@ -51,4 +51,4 @@ def edit_subthread(content, subthread_id):
 
     sql = "UPDATE subthreads SET content=:content WHERE id=:subthread_id"
     db.session.execute(sql, {"content": content, "subthread_id": subthread_id})
-    db.session.commit()
+    db.session.commit() 

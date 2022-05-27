@@ -182,3 +182,14 @@ def register():
         if not users.register(username, password1, role):
             return render_template("error.html", message="Something went wrong, try again.")
         return redirect("/")
+
+
+@app.route("/search", methods=["POST"])
+def search():
+    if "message" in request.form:
+        message = request.form["message"]
+    if message == "":
+        return render_template("error.html", message="Input at least 1 character")    
+
+    msgs = messages.search_messages(message)
+    return render_template("search.html", message=message, msgs=msgs, len=len(msgs))
