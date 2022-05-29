@@ -24,8 +24,8 @@ content %}
     </li>
     <br />
     <small>
-      Active threads: {{thread[4]}} &nbsp; Replies: {{thread[5]}} &nbsp; Latest
-      reply: {{thread[6]}}</small>
+      Active threads: {{thread[5]}} &nbsp; Replies: {{thread[6]}} &nbsp; Latest
+      reply: {{thread[7]}}</small>
 
     <hr />
     {% if session.user_role == 2 %}
@@ -55,19 +55,12 @@ content %}
     <div class="center">
       <p>
         <b>
-          Total active threads: {{subthreads.count}} &nbsp; Total messages:
+          Total active threads: {{subthreads.count}} &nbsp; Forum users: {{users.count}} &nbsp; Total messages:
           {{messages.count}}
         </b>
       </p>
       <hr />
     </div>
   </ul>
-  <br />
-  <footer>
-    <div class="center">
-      <small>Copyright &copy; Discussion Forum 2022</small>
-    </div>
-    <br>
-  </footer>
 </div>
 {% endblock %}

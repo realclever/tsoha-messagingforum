@@ -3,7 +3,7 @@ import users
 
 
 def get_subthreads(thread_id):
-    sql = '''SELECT id, name, content, user_id, created_at,
+    sql = '''SELECT id, name, content, user_id, created_at, visible,
     (SELECT TO_CHAR(m.created_at, \'HH12:MI AM MON DD\') FROM messages m 
     WHERE m.subthread_id = s.id AND m.visible = 1 ORDER BY m.created_at DESC LIMIT 1),
     (SELECT COUNT(m.id) FROM messages m WHERE s.id = m.subthread_id AND m.visible = 1)
@@ -24,7 +24,7 @@ def create_subthread(name, content, thread_id):
 
 
 def get_subthread(subthread_id):
-    sql = "SELECT s.id, s.name, s.content, s.thread_id, s.user_id, s.created_at, users.username FROM subthreads s "\
+    sql = "SELECT s.id, s.name, s.content, s.thread_id, s.user_id, s.created_at, s.visible, users.username FROM subthreads s "\
         "INNER JOIN users ON s.user_id = users.id "\
         "INNER JOIN threads ON s.thread_id = threads.id "\
         "WHERE s.id=:subthread_id AND s.visible = 1"

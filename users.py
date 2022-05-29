@@ -49,3 +49,7 @@ def require_role(role):
 def check_csrf():
     if session["csrf_token"] != request.form["csrf_token"]:
         abort(403)
+
+def users_count():
+    sql = "SELECT COUNT(*) FROM users u"
+    return db.session.execute(sql).fetchone()

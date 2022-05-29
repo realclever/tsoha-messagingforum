@@ -12,9 +12,10 @@ def index():
     thread = threads.get_threads()
     count = subthreads.subthreads_count()
     kauant = messages.messages_count()
+    userCount = users.users_count()
 
     if request.method == "GET":
-        return render_template("index.html", threads=thread, subthreads=count, messages=kauant)
+        return render_template("index.html", threads=thread, subthreads=count, messages=kauant, users=userCount)
 
     if request.method == "POST":
         users.check_csrf()

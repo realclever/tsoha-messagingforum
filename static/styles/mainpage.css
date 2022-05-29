@@ -1,4 +1,5 @@
 body {
+  height:100%;
   margin: 0;
   padding: 0;
   font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
@@ -29,8 +30,7 @@ header h1.logo:hover {
 }
 
 .container {
-  width: 1200px;
-  margin: 0 auto;
+  width:auto;
 }
 div.home {
   padding: 10px 0 30px 0;
@@ -174,4 +174,11 @@ margin-top: 10px;
   color: rgb(96, 96, 96);
   font-size: .8rem;
   letter-spacing: 0.5px;
+}
+
+footer {
+  height: 40px;
+  margin-top: 30px;
+  margin-bottom: 10px;
+  text-align: center;
 }

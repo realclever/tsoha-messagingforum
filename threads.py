@@ -3,7 +3,7 @@ import users
 
 
 def get_threads():
-    sql = '''SELECT id, name, des, created_at, 
+    sql = '''SELECT id, name, des, created_at, visible, 
     (SELECT COUNT(s.id) FROM subthreads s WHERE threads.id = s.thread_id AND s.visible = 1),
     (SELECT COUNT(m.id) FROM messages m, subthreads s  
     WHERE s.id = m.subthread_id AND threads.id = s.thread_id AND s.visible = 1 AND m.visible = 1),
@@ -15,7 +15,7 @@ def get_threads():
 
 
 def get_thread(thread_id):
-    sql = "SELECT id, name, des FROM threads WHERE id=:thread_id AND visible = 1"
+    sql = "SELECT id, name, des, visible FROM threads WHERE id=:thread_id AND visible = 1"
     return db.session.execute(sql, {"thread_id": thread_id}).fetchone()
 
 
