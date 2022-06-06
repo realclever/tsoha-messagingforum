@@ -11,11 +11,12 @@ body {
 }
 
 header {
-  background-color: #dfb887;
+  background-color: #df8787;
   height: 35px;
   width: 100%;
   opacity: 0.9;
   margin-bottom: 10px;
+  
 }
 header h1.logo {
   margin: 0;
@@ -125,7 +126,7 @@ button, input[type="submit"] {
 }
 
 input[type=text], input[type=password], select {
-  width: 70%;
+  width: 40%;
   padding: 8px 16px;
   margin: 3px 0;
   display: inline-block;
@@ -166,8 +167,10 @@ label {
 }
 
 .search {
-width: 17%;
-margin-top: 10px;
+width: 30%;
+float:right;
+top: 25%;
+
 }
 
 .sremove {

@@ -8,59 +8,107 @@ content %}
 <hr />
 
 <div class="container">
-  {% if not threads %}
+
   <div>
-    <h4>Nothing here yet</h4>
-  </div>
-  {% endif %}
-
-  <ul style="list-style-type: none">
-    <h2>Forums</h2>
-    {% for thread in threads %}
-    <hr />
-    <li>
-      <h4><a href="/thread/{{thread.id}}">{{thread.name}}</a></h4>
-      {{thread.des}}
-    </li>
-    <br />
-    <small>
-      Active threads: {{thread[5]}} &nbsp; Replies: {{thread[6]}} &nbsp; Latest
-      reply: {{thread[7]}}</small>
-
-    <hr />
-    {% if session.user_role == 2 %}
-    <form action="/remove_thread" class="sremove"
-      onSubmit="return confirm('Are you sure you wish to remove {{thread.name}}?');" method="POST">
-      <input type="submit" value="Remove" />
-      <input type="hidden" name="thread_id" value="{{thread.id}}" />
-      <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
-    </form>
-    {% endif %} {% endfor %}
-
-    <div class="center">
+    <ul style="list-style-type: none">
+      <h2>Forums</h2>
+      {% if not threads %}
+      <div class="center">
+        <hr>
+        <h4>Nothing here yet</h4>
+        <hr>
+      </div>
+      {% else %}
+      {% for thread in threads %}
+      <hr />
+      <li>
+        <h4><a href="/thread/{{thread.id}}">{{thread.name}}</a></h4>
+        {{thread.des}}
+      </li>
+      <br />
+      <small>
+        Active threads: {{thread[6]}} &nbsp; Replies: {{thread[7]}} &nbsp; Latest
+        reply: {{thread[8]}}</small>
+      <hr />
       {% if session.user_role == 2 %}
-      <form class="form" action="/" method="POST">
-        <p><b>Create new thread</b></p>
-        <p><input type="text" name="name" placeholder="Subject" /></p>
-        <p><input type="text" name="des" placeholder="Description" /></p>
-        <button class="button">Create</button>
+      <form action="/remove_thread" class="sremove"
+        onSubmit="return confirm('Are you sure you wish to remove {{thread.name}}?');" method="POST">
+        <input type="submit" value="Remove" />
+        <input type="hidden" name="thread_id" value="{{thread.id}}" />
         <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
       </form>
-      <br />
-      {% endif %}
-    </div>
+      <hr>
+      {% endif %} {% endfor %}
+    </ul>
+    {% endif %}
+  </div>
 
-    <hr />
-    <h2>Forum Statistics</h2>
-    <div class="center">
-      <p>
-        <b>
-          Total active threads: {{subthreads.count}} &nbsp; Forum users: {{users.count}} &nbsp; Total messages:
-          {{messages.count}}
-        </b>
-      </p>
+  {% if session.user_id %}
+  <div>
+    <ul style="list-style-type: none">
+      <h2>Restricted Forums</h2>
+      {% if not restricted_threads %}
+      <div class="center">
+        <hr>
+        <h4>Nothing here yet</h4>
+        <hr>
+      </div>
+      {% else %}
+      {% for restricted_thread in restricted_threads %}
       <hr />
-    </div>
-  </ul>
+      <li>
+        <h4><a href="/thread/{{restricted_thread.id}}">{{restricted_thread.name}}</a></h4>
+        {{restricted_thread.des}}
+      </li>
+      <br />
+      <small>
+        Active threads: {{restricted_thread[6]}} &nbsp; Replies: {{restricted_thread[7]}} &nbsp; Latest
+        reply: {{restricted_thread[8]}}</small>
+      <hr />
+
+      {% if session.user_role == 2 and restricted_thread.restricted %}
+      <form action="/remove_thread" class="sremove"
+        onSubmit="return confirm('Are you sure you wish to remove {{restricted_thread.name}}?');" method="POST">
+        <input type="submit" value="Remove" />
+        <input type="hidden" name="thread_id" value="{{restricted_thread.id}}" />
+        <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
+        <a href="/permission/{{restricted_thread.id}}"><small>Add permissions</small></a>
+      </form>
+      <hr>
+      {% endif %} {% endfor %}
+    </ul>
+    {% endif %} {% endif %}
+  </div>
+
+  <div class="center">
+    {% if session.user_role == 2 %}
+    <form class="form" action="/" method="POST">
+      <p><b>Create new thread</b></p>
+      <p><input type="text" name="name" placeholder="Subject" /></p>
+      <p><input type="text" name="des" placeholder="Description" /></p>
+      <p><select name="restricted">
+          <option value="0">Public</option>
+          <option value="1">Restricted</option>
+        </select></p>
+      <button class="button">Create</button>
+      <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
+    </form>
+    <br />
+    {% endif %}
+  </div>
+
+  <hr />
+  <h2>Forum Statistics</h2>
+  <div class="center">
+    <p>
+      <b>
+        Total active threads: {{subthreads.count}} &nbsp; Total messages:
+        {{messages.count}}
+      </b>
+    </p>
+    <hr />
+  </div>
+
 </div>
+
 {% endblock %}

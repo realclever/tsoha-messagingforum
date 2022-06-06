@@ -12,10 +12,10 @@ def index():
     thread = threads.get_threads()
     count = subthreads.subthreads_count()
     kauant = messages.messages_count()
-    userCount = users.users_count()
+    restricted_thread = threads.get_restricted_threads()
 
     if request.method == "GET":
-        return render_template("index.html", threads=thread, subthreads=count, messages=kauant, users=userCount)
+        return render_template("index.html", threads=thread, subthreads=count, messages=kauant, restricted_threads=restricted_thread)
 
     if request.method == "POST":
         users.check_csrf()
@@ -23,11 +23,17 @@ def index():
 
         name = request.form["name"]
         des = request.form["des"]
-    if len(name) < 3 or len(name) > 20:
-        return render_template("error.html", message="Subject should be 3-20 characters.")
+        restricted = request.form["restricted"]
+
+
+    if restricted not in ("0", "1"):
+        return render_template("error.html", message="Unknown thread type, try again.")
+    if len(name) < 3 or len(name) > 50:
+        return render_template("error.html", message="Subject should be 3-50 characters.")
     if len(des) < 10 or len(des) > 500:
         return render_template("error.html", message="Description should be 10-500 characters.")
-    if threads.create_thread(name, des):
+
+    if threads.create_thread(name, des, restricted):
         return redirect(request.referrer)
     else:
         return render_template("error.html", message="Something went wrong")
@@ -37,9 +43,14 @@ def index():
 def thread(id):
     thread = threads.get_thread(id)
     subthread = subthreads.get_subthreads(id)
+    check_validation = users.check_permission(id)
+
+    check_permission = False
+    if thread.restricted and check_validation:
+        check_permission = True
 
     if request.method == "GET":
-        return render_template("thread.html", thread=thread, subthreads=subthread)
+        return render_template("thread.html", thread=thread, subthreads=subthread, check_permission=check_permission)
 
     if request.method == "POST":
         users.check_csrf()
@@ -61,9 +72,10 @@ def thread(id):
 def subthread(id):
     subthread = subthreads.get_subthread(id)
     message = messages.get_messages(id)
+    permission = users.check_permission(subthread.thread_id)
 
     if request.method == "GET":
-        return render_template("subthread.html", subthreads=subthread, messages=message)
+        return render_template("subthread.html", subthreads=subthread, messages=message, permission=permission)
 
     if request.method == "POST":
         users.check_csrf()
@@ -131,6 +143,7 @@ def edit_subthread(id):
 
 @app.route('/subthread/<int:s_id>/edit_message/<int:id>', methods=["GET", "POST"])
 def edit_message(id, s_id):
+    users.check_csrf()
     subthread = subthreads.get_subthread(s_id)
     message = messages.get_message(id)
 
@@ -148,6 +161,32 @@ def edit_message(id, s_id):
         messages.edit_message(content, message_id)
 
     return redirect(request.referrer)
+
+@app.route("/permission/<int:id>", methods=["GET", "POST"])
+def permission(id):
+    thread = threads.get_thread(id)
+    users.require_role(2)
+
+    if request.method == "GET":
+        return render_template("permission.html", threads=thread)
+
+    if request.method == "POST":
+        users.check_csrf()
+
+    if "thread_id" in request.form:    
+        username = request.form["username"]
+        thread_id = request.form["thread_id"]
+
+    if len(username) < 1 or len(username) > 20:
+            return render_template("error.html", message="Username should be 1-20 characters.")
+
+    if users.get_check_user(username) == False:
+         return render_template("error.html", message="Can't find member. Try again.")
+
+    if threads.add_permission_to_restricted(thread_id, users.get_check_user(username)):
+        return redirect(request.referrer)
+    else:
+        return render_template("error.html", message="Something went wrong")
 
 
 @app.route("/login", methods=["GET", "POST"])
@@ -199,12 +238,11 @@ def register():
 
 @app.route("/search", methods=["POST"])
 def search():
-    users.check_csrf()
-    
+
     if "message" in request.form:
         message = request.form["message"]
     if message == "":
-        return render_template("error.html", message="Input at least 1 character")    
+        return render_template("error.html", message="Input at least 1 character")
 
     msgs = messages.search_messages(message)
     return render_template("search.html", message=message, msgs=msgs, len=len(msgs))

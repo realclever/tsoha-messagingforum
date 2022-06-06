@@ -10,7 +10,8 @@ CREATE TABLE threads (
     name TEXT,
     des TEXT,
     created_at TIMESTAMP,
-    visible INTEGER
+    visible INTEGER,
+    restricted INTEGER
 );
 
 CREATE TABLE subthreads (
@@ -30,4 +31,10 @@ CREATE TABLE messages (
     user_id INTEGER REFERENCES users,
     created_at TIMESTAMP,
     visible INTEGER
+);
+
+CREATE TABLE threads_restricted (
+    id SERIAL PRIMARY KEY,
+    user_id INTEGER REFERENCES users,
+    thread_id INTEGER REFERENCES threads
 );

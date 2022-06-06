@@ -50,6 +50,17 @@ def check_csrf():
     if session["csrf_token"] != request.form["csrf_token"]:
         abort(403)
 
-def users_count():
-    sql = "SELECT COUNT(*) FROM users u"
-    return db.session.execute(sql).fetchone()
+
+def check_permission(thread_id):
+    sql = "SELECT id FROM threads_restricted WHERE thread_id=:thread_id AND user_id=:user_id"
+    if db.session.execute(sql, {"user_id": session.get("user_id", 0), "thread_id": thread_id}).fetchone():
+        return True
+
+
+def get_check_user(username):
+    sql = "SELECT id FROM users WHERE username=:username"
+    result = db.session.execute(sql, {"username": username}).fetchone()
+    if result is None:
+        return False
+    else:
+        return result[0]

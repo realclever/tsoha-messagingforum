@@ -2,16 +2,24 @@
 {% block title %} thread {% endblock %}
 {% block content %}
 
-{% if not thread.visible %}
+{% if thread.restricted and not check_permission %}
+<hr>
+<h3>You have no permission to view this thread</h3>
+<hr>
+<div class="center">
+    <button onclick="location.href='/'">
+        Return
+    </button>
+</div>
+{% elif not thread.visible %}
 <hr>
 <h3>This thread doesn't exist anymore</h3>
 <hr>
 <div class="center">
-    <button  onclick="location.href='/'">
+    <button onclick="location.href='/'">
         Return
-      </button>
-    </div>
-    
+    </button>
+</div>
 {% else %}
 <hr>
 <h3>{{thread.name}}</h3>
