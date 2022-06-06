@@ -1,5 +1,5 @@
 from app import app
-from flask import render_template, request, redirect
+from flask import render_template, request, redirect, flash
 import users
 import threads
 import subthreads
@@ -25,18 +25,25 @@ def index():
         des = request.form["des"]
         restricted = request.form["restricted"]
 
-
     if restricted not in ("0", "1"):
-        return render_template("error.html", message="Unknown thread type, try again.")
+        flash("Unknown thread type, try again.", "warning")
+
+        return redirect(request.referrer)
     if len(name) < 3 or len(name) > 50:
-        return render_template("error.html", message="Subject should be 3-50 characters.")
+        flash("Subject should be 3-50 characters.", "warning")
+
+        return redirect(request.referrer)
     if len(des) < 10 or len(des) > 500:
-        return render_template("error.html", message="Description should be 10-500 characters.")
+        flash("Description should be 10-500 characters.", "warning")
+        return redirect(request.referrer)
 
     if threads.create_thread(name, des, restricted):
+        flash("New thread successfully added", "success")
         return redirect(request.referrer)
+
     else:
-        return render_template("error.html", message="Something went wrong")
+        flash("Something went wrong.", "warning")
+        return redirect(request.referrer)
 
 
 @app.route("/thread/<int:id>", methods=["GET", "POST"])
@@ -58,14 +65,22 @@ def thread(id):
 
         name = request.form["name"]
         content = request.form["content"]
+
     if len(name) < 3 or len(name) > 50:
-        return render_template("error.html", message="Subject should be 3-50 characters.")
-    if len(content) < 10 or len(content) > 300:
-        return render_template("error.html", message="Description should be 10-300 characters.")
-    if subthreads.create_subthread(name, content, id):
+        flash("Subject should be 3-50 characters.", "warning")
         return redirect(request.referrer)
+
+    if len(content) < 10 or len(content) > 300:
+        flash("Description should be 10-300 characters.", "warning")
+        return redirect(request.referrer)
+
+    if subthreads.create_subthread(name, content, id):
+        flash("New discussion successfully added", "success")
+        return redirect(request.referrer)
+
     else:
-        return render_template("error.html", message="Something went wrong")
+        flash("Something went wrong.", "warning")
+        return redirect(request.referrer)
 
 
 @app.route("/subthread/<int:id>", methods=["GET", "POST"])
@@ -83,11 +98,15 @@ def subthread(id):
 
         content = request.form["content"]
     if len(content) < 1 or len(content) > 800:
-        return render_template("error.html", message="Reply should be 1-800 characters.")
+        flash("Reply should be 1-800 characters.", "warning")
+        return redirect(request.referrer)
+
     if messages.create_message(content, id):
         return redirect(request.referrer)
+
     else:
-        return render_template("error.html", message="Something went wrong")
+        flash("Something went wrong", "warning")
+        return redirect(request.referrer)
 
 
 @app.route("/remove_subthread", methods=["POST"])
@@ -97,6 +116,7 @@ def remove_subthread():
     if "subthread_id" in request.form:
         subthread_id = request.form["subthread_id"]
         subthreads.remove_subthread(subthread_id)
+    flash("Discussion successfully removed", "success")
     return redirect(request.referrer)
 
 
@@ -108,6 +128,7 @@ def remove_thread():
     if "thread_id" in request.form:
         thread_id = request.form["thread_id"]
         threads.remove_thread(thread_id)
+    flash("Thread successfully removed", "success")
     return redirect("/")
 
 
@@ -118,6 +139,7 @@ def remove_message():
     if "message_id" in request.form:
         message_id = request.form["message_id"]
         messages.remove_message(message_id)
+    flash("Message successfully removed", "success")
     return redirect(request.referrer)
 
 
@@ -134,16 +156,19 @@ def edit_subthread(id):
         if "subthread_id" in request.form:
             content = request.form["content"]
             subthread_id = request.form["subthread_id"]
+
         if len(content) < 1 or len(content) > 800:
-            return render_template("error.html", message="Reply should be 1-800 characters.")
+            flash("Reply should be 1-800 characters.", "warning")
+            return redirect(request.referrer)
+
         subthreads.edit_subthread(content, subthread_id)
+        flash("Message successfully edited.", "success")
 
     return redirect(request.referrer)
 
 
 @app.route('/subthread/<int:s_id>/edit_message/<int:id>', methods=["GET", "POST"])
 def edit_message(id, s_id):
-    users.check_csrf()
     subthread = subthreads.get_subthread(s_id)
     message = messages.get_message(id)
 
@@ -156,11 +181,16 @@ def edit_message(id, s_id):
         if "message_id" in request.form:
             content = request.form["content"]
             message_id = request.form["message_id"]
+
         if len(content) < 1 or len(content) > 800:
-            return render_template("error.html", message="Reply should be 1-800 characters.")
+            flash("Reply should be 1-800 characters.", "warning")
+            return redirect(request.referrer)
+
         messages.edit_message(content, message_id)
+        flash("Message successfully edited.", "success")
 
     return redirect(request.referrer)
+
 
 @app.route("/permission/<int:id>", methods=["GET", "POST"])
 def permission(id):
@@ -173,20 +203,24 @@ def permission(id):
     if request.method == "POST":
         users.check_csrf()
 
-    if "thread_id" in request.form:    
+    if "thread_id" in request.form:
         username = request.form["username"]
         thread_id = request.form["thread_id"]
 
     if len(username) < 1 or len(username) > 20:
-            return render_template("error.html", message="Username should be 1-20 characters.")
+        flash("Username should be 1-20 characters.", "warning")
+        return redirect(request.referrer)
 
     if users.get_check_user(username) == False:
-         return render_template("error.html", message="Can't find member. Try again.")
+        flash("Can't find member. Try again.", "warning")
+        return redirect(request.referrer)
 
     if threads.add_permission_to_restricted(thread_id, users.get_check_user(username)):
+        flash("Permission granted.", "success")
         return redirect(request.referrer)
     else:
-        return render_template("error.html", message="Something went wrong")
+        flash("Something went wrong", "warning")
+        return redirect(request.referrer)
 
 
 @app.route("/login", methods=["GET", "POST"])
@@ -199,13 +233,17 @@ def login():
         password = request.form["password"]
 
         if not users.login(username, password):
-            return render_template("error.html", message="Invalid username or password.")
-        return redirect("/")
+            flash("Invalid username or password.", "warning")
+            return redirect(request.referrer)
+        else:
+            flash("Successfully logged in", "success")    
+            return redirect("/")
 
 
 @app.route("/logout")
 def logout():
     users.logout()
+    flash("Successfully logged out", "success")   
     return redirect("/")
 
 
@@ -217,23 +255,30 @@ def register():
     if request.method == "POST":
         username = request.form["username"]
         if len(username) < 1 or len(username) > 20:
-            return render_template("error.html", message="Username should be 1-20 characters.")
+            flash("Username should be 1-20 characters.", "warning")
+            return redirect(request.referrer)
 
         password1 = request.form["password1"]
         password2 = request.form["password2"]
         if password1 != password2:
-            return render_template("error.html", message="Passwords don't match, try again.")
+            flash("Passwords don't match, try again.", "warning")
+            return redirect(request.referrer)
 
         if password1 == "":
-            return render_template("error.html", message="Password can't be null.")
+            flash("Password can't be null.", "warning")
+            return redirect(request.referrer)
 
         role = request.form["role"]
         if role not in ("1", "2"):
-            return render_template("error.html", message="Unknown user role, try again.")
+            flash("Unknown user role, try again.", "warning")
+            return redirect(request.referrer)
 
         if not users.register(username, password1, role):
-            return render_template("error.html", message="Something went wrong, try again.")
-        return redirect("/")
+            flash("Something went wrong, try again.", "warning")
+            return redirect(request.referrer)
+        else:
+            flash("Registration completeted. Welcome to Discussion Forum", "success")
+            return redirect("/")
 
 
 @app.route("/search", methods=["POST"])
@@ -242,7 +287,8 @@ def search():
     if "message" in request.form:
         message = request.form["message"]
     if message == "":
-        return render_template("error.html", message="Input at least 1 character")
+        flash("Input at least 1 character to use search.", "warning")
+        return redirect(request.referrer)
 
     msgs = messages.search_messages(message)
     return render_template("search.html", message=message, msgs=msgs, len=len(msgs))
