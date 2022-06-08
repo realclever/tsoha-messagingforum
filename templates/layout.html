@@ -1,49 +1,51 @@
 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
 <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='styles/mainpage.css') }}" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
 <!DOCTYPE html>
 <html lang="en">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-<div id="header">
-  <form action="/search", class="search" method="POST">
+<div class="container">
+  <form action="/search" class="search" method="POST">
     <input type="text" name="message">
-    <button>Search</button>
+    <button><i class="fa fa-search"
+      style="font-size: 12px;">
+  </i></button>
     <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
   </form>
 
   <h2>
-    <img
-      src="static/styles/images/user_message.png" /><strong>
+    <img src="../static/styles/img/logo.png" width="50" height="50"><strong>
       <a href="/"> Discussion Forum </a></strong>
   </h2>
 
-  {% if session.user_id %}Signed in as <b>{{session.user_name}}</b>.
-  <button onclick="location.href='/logout'">Log out</button>
+  {% if session.user_id %}<small>Signed in as <b>{{session.user_name}}</b></small>.
+  <button onclick="location.href='/logout'"><small>Log out</small></button>
   {% else %}
 
-  <button onclick="location.href='/register'">Sign up</button>
-  <button onclick="location.href='/login'">Log in</button>
+  <button onclick="location.href='/register'"><small>Sign up</small></button>
+  <button onclick="location.href='/login'"><small>Log in</small></button>
   {% endif %}
-
 </div>
 
 <body>
-  <div class="center">
+  <div class="container">
+    <div class="center">
 
-    {% with messages = get_flashed_messages(with_categories=true) %}
-    {% if messages %}
-
-    {% for category, message in messages %}
-    <div class="alert alert-{{category}} alert-dismissible fade show" role="alert">
-      <span>{{message}}</span>
-      <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-        <span aria-hidden="true">&times;</span>
-      </button>
+      {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+      {% for category, message in messages %}
+      <div class="alert alert-{{category}} alert-dismissible fade show" role="alert">
+        <span>{{message}}</span>
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      {% endfor %}
+      {% endif %}
+      {% endwith %}
     </div>
-    {% endfor %}
-    {% endif %}
-    {% endwith %}
   </div>
   {% block content %} {% endblock %}
   <footer>
@@ -52,5 +54,4 @@
     </div>
   </footer>
 </body>
-
 </html>

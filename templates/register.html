@@ -8,26 +8,24 @@ content %}
 <hr />
 <div class="container">
   <div class="center">
-    <form action="/register" class="signregis" method="post">
-      Username:
+    <form action="/register" class="signregis" method="POST">
+      <small> Username:</small>
       <input type="text" name="username" minlength="1" maxlength="20" />
       <br />
-      Password:
+      <small>Password:</small>
       <input type="password" name="password1" minlength="4" maxlength="64" />
       <br />
-      RE password: <input type="password" name="password2" />
+      <small>Confirm password:</small>
+      <input type="password" name="password2" />
       <br />
-      Role:
-      <select name="role">
-        <option value="1">User</option>
-        <option value="2">Admin</option>
-      </select>
-      <p>
-        <input type="submit" value="Create account" />
-      </p>
+      <small>User role:
+        <select name="role">
+          <option value="1">User</option>
+          <option value="2">Admin</option>
+        </select></small><br><br>
+      <input class="btn default" type="submit" value="Create account" />
     </form>
-
-    <button onclick="location.href='/login'">Return to login</button>
+    <button class="btn default" onclick="location.href='/login'">Return to login</button>
   </div>
 </div>
 {% endblock %}

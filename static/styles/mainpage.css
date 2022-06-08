@@ -10,43 +10,13 @@ body {
   text-align: center;
 }
 
-header {
-  background-color: #df8787;
-  height: 35px;
-  width: 100%;
-  opacity: 0.9;
-  margin-bottom: 10px;
-  
-}
-header h1.logo {
-  margin: 0;
-  font-size: 1.7em;
-  color: #fff;
-  text-transform: uppercase;
-  float: left;
-}
-header h1.logo:hover {
-  color: #fff;
-  text-decoration: none;
+.container {
+  background: none;
+  overflow: none;
+  display: block;
+  z-index: 1;
 }
 
-.container {
-  width:auto;
-}
-div.home {
-  padding: 10px 0 30px 0;
-  background-color: #e6e6fa;
-  -webkit-border-radius: 6px;
-  -moz-border-radius: 6px;
-  border-radius: 6px;
-}
-div.about {
-  padding: 10px 0 30px 0;
-  background-color: #e6e6fa;
-  -webkit-border-radius: 6px;
-  -moz-border-radius: 6px;
-  border-radius: 6px;
-}
 h2 {
   font-size: 1.8em;
   margin-top: 10px;
@@ -115,7 +85,20 @@ a:active {
 }
 
 
-button, input[type="submit"] {
+button {
+  font-size: .8rem;
+	background: none;
+	color: inherit;
+	border: none;
+	font: inherit;
+	cursor: pointer;
+	outline: inherit;
+  display: inline-block;
+}
+
+
+
+input[type="submit"] {
   font-size: .8rem;
 	background: none;
 	color: inherit;
@@ -128,17 +111,31 @@ button, input[type="submit"] {
 input[type=text], input[type=password], select {
   width: 40%;
   padding: 8px 16px;
-  margin: 3px 0;
+  margin: 4px 0;
   display: inline-block;
   border: 1px solid #ccc;
   border-radius: 4px;
   box-sizing: border-box;
+  max-width: 100%;
+  line-height: 1;
+  border-radius: 2px;
+  border: 1px solid #ccc;
+  
+  
 }
 
 input#message {
+  text-align: center;
+  width: 90%;
   background-image: url("https://d1nhio0ox7pgb.cloudfront.net/_img/i_collection_png/32x32/plain/user_message.png");
   background-repeat: no-repeat;
   text-indent: 20px;
+  padding: 10px;
+  max-width: 100%;
+  line-height: 2;
+  border-radius: 2px;
+  border: 1px solid #ccc;
+  box-shadow: 1px 1px 1px #999;
 }
 
 input#message:focus{
@@ -167,10 +164,24 @@ label {
 }
 
 .search {
-width: 30%;
+width: 50%;
+height: 35px;
 float:right;
-top: 25%;
+margin:7px;
+margin-right: 16px;
+display: flex;
+justify-content: flex-end;
+}
 
+.search button{
+  background-color: #FFF;
+  color: #000;
+  float: right;
+  padding: 5px 10px;
+  margin-right: 16px;
+  font-size: 12px;
+  border: none;
+  cursor: pointer;
 }
 
 .sremove {
@@ -184,4 +195,24 @@ footer {
   margin-top: 30px;
   margin-bottom: 10px;
   text-align: center;
+}
+
+.btn {
+  border: 1px solid rgb(159, 172, 247);
+  box-shadow: 0.5px 0.5px 0.5px #999;
+  background-color: white;
+  color: black;
+  padding: 14px 28px;
+  font-size: 13px;
+  cursor: pointer;
+  display: inline-block;
+}
+
+.default {
+  border-color: #ccc;
+  color: black;
+}
+
+.default:hover {
+  background: #ececec;
 }

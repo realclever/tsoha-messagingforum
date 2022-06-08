@@ -44,7 +44,6 @@
                 <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
             </form>
         </div>
-
         {% else %}
         <hr>
         <p> <b>{{message.username}}</b> <br><small>Posted: {{message.created_at.strftime("%I:%M %p %B %d")}}</small>
@@ -58,13 +57,12 @@
     <div class="center">
         {% if session.user_role == 1 or session.user_role == 2 %}
         <form class="form" action="/subthread/{{subthreads.id}}" method="POST">
-            <p><input type="text" id="message" name="content" placeholder="Reply to this conversation"></textarea></p>
-            <button class="button">Submit reply</button>
+            <p><input type="text" id="message" name="content" placeholder="Reply to this conversation"></input></p>
+            <button class="btn default" >Submit reply</button>
             <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
         </form>
         {% else %}
         <h5><a href="/login">Log in</a> to join the conversation</h5>
-        <button onclick="history.back()">Return</button>
         {% endif %}
     </div>
     {% endif %}

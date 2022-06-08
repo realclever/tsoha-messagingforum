@@ -8,13 +8,13 @@
   <div class="center">
 
     <form action="/permission/{{threads.id}}" class="center" method="POST">
-      <input type="text" name="username" placeholder="Input username">
+      <input type="text" name="username" placeholder="Username">
       <br /><br />
       <input type="submit" name="edit" value="Add permissions" />
       <input type="hidden" name="thread_id" value="{{ threads.id }}">
       <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
     </form>
-    <button onclick="location.href='/'">Return</button>
+    <button class="btn default" onclick="location.href='/'">Return</button>
   </div>
 </div>
 
