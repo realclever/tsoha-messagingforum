@@ -1,21 +1,20 @@
-<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" />
-
-{% extends "layout.html" %} {% block title %} register {% endblock %} {% block
+{% extends "layout.html" %} {% block title %} Register {% endblock %} {% block
 content %}
 
 <hr />
 <h3>Sign up</h3>
 <hr />
+<br>
 <div class="container">
   <div class="center">
-    <form action="/register" class="signregis" method="POST">
+    <form action="/register" method="POST">
       <small> Username:</small>
       <input type="text" name="username" minlength="1" maxlength="20" />
       <br />
       <small>Password:</small>
       <input type="password" name="password1" minlength="4" maxlength="64" />
       <br />
-      <small>Confirm password:</small>
+      <small>Re-enter password:</small>
       <input type="password" name="password2" />
       <br />
       <small>User role:
@@ -23,9 +22,9 @@ content %}
           <option value="1">User</option>
           <option value="2">Admin</option>
         </select></small><br><br>
-      <input class="btn default" type="submit" value="Create account" />
+      <input type="submit" class="btn btn-outline-dark btn-sm" value="Create account"/>
     </form>
-    <button class="btn default" onclick="location.href='/login'">Return to login</button>
+    <button class="btn btn-outline-dark btn-sm" onclick="location.href='/login'">Return to login</button>
   </div>
 </div>
 {% endblock %}

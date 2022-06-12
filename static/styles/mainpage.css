@@ -1,9 +1,14 @@
 body {
-  height:100%;
+  height: 100%;
   margin: 0;
   padding: 0;
   font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
   color: #444;
+}
+
+form {
+  display: inline;
+  padding: 2px;
 }
 
 .center {
@@ -14,7 +19,6 @@ body {
   background: none;
   overflow: none;
   display: block;
-  z-index: 1;
 }
 
 h2 {
@@ -22,21 +26,22 @@ h2 {
   margin-top: 10px;
   letter-spacing: -2px;
 }
+
 h3 {
   font-size: 1.7em;
   margin-top: 25px;
   margin-bottom: 25px;
   text-align: center;
-  letter-spacing: -2px;
+  letter-spacing: -1px;
   color: rgb(0, 0, 0);
   font-weight: 430;
 }
 
 h5 {
-  font-size: 1.8em;
+  font-size: 1.6em;
   margin-top: 10px;
   letter-spacing: -2px;
-  color: rgb(159, 157, 157);
+  color: rgb(192, 192, 192);
 }
 
 small {
@@ -49,12 +54,15 @@ small {
   float: left;
   margin-top: 8px;
 }
+
 .menu li {
   display: inline;
 }
-.menu li + li {
+
+.menu li+li {
   margin-left: 35px;
 }
+
 .menu li a {
   color: #444;
   text-decoration: none;
@@ -87,29 +95,22 @@ a:active {
 
 button {
   font-size: .8rem;
-	background: none;
-	color: inherit;
-	border: none;
-	font: inherit;
-	cursor: pointer;
-	outline: inherit;
-  display: inline-block;
+  background: none;
+  color: inherit;
+  border: none;
+  font: inherit;
+  cursor: pointer;
+  outline: inherit;
 }
-
-
 
 input[type="submit"] {
-  font-size: .8rem;
-	background: none;
-	color: inherit;
-	border: none;
-	font: inherit;
-	cursor: pointer;
-	outline: inherit;
+  background-color: transparent;
 }
 
-input[type=text], input[type=password], select {
-  width: 40%;
+input[type=text],
+input[type=password],
+select {
+  width: 45%;
   padding: 8px 16px;
   margin: 4px 0;
   display: inline-block;
@@ -120,60 +121,58 @@ input[type=text], input[type=password], select {
   line-height: 1;
   border-radius: 2px;
   border: 1px solid #ccc;
-  
-  
+
 }
 
 input#message {
   text-align: center;
   width: 90%;
-  background-image: url("https://d1nhio0ox7pgb.cloudfront.net/_img/i_collection_png/32x32/plain/user_message.png");
-  background-repeat: no-repeat;
   text-indent: 20px;
   padding: 10px;
   max-width: 100%;
-  line-height: 2;
+  line-height: 6;
   border-radius: 2px;
   border: 1px solid #ccc;
   box-shadow: 1px 1px 1px #999;
 }
 
-input#message:focus{
-  background-image:none;
+input#message:focus {
+  background-image: none;
   text-indent: 0px;
+}
+
+hr {
+  border-top: 1px solid #f1f1f1;
 }
 
 label,
 textarea {
-    font-size: .8rem;
-    letter-spacing: 1px;
-}
-textarea {
-    width: 70%;
-    padding: 10px;
-    max-width: 100%;
-    line-height: 1.5;
-    border-radius: 5px;
-    border: 1px solid #ccc;
-    box-shadow: 1px 1px 1px #999;
+  font-size: .9rem;
+  letter-spacing: 1px;
 }
 
-label {
-    display: block;
-    margin-bottom: 10px;
+textarea {
+  text-align: center;
+  width: 100%;
+  padding: 10px;
+  max-width: 100%;
+  line-height: 2;
+  border-radius: 1px;
+  border: 1px solid #999;
+  box-shadow: 1px 1px 1px #999;
 }
 
 .search {
-width: 50%;
-height: 35px;
-float:right;
-margin:7px;
-margin-right: 16px;
-display: flex;
-justify-content: flex-end;
+  width: 50%;
+  height: 35px;
+  float: right;
+  margin: 7px;
+  margin-right: 16px;
+  display: flex;
+  justify-content: flex-end;
 }
 
-.search button{
+.search button {
   background-color: #FFF;
   color: #000;
   float: right;
@@ -197,22 +196,78 @@ footer {
   text-align: center;
 }
 
-.btn {
-  border: 1px solid rgb(159, 172, 247);
-  box-shadow: 0.5px 0.5px 0.5px #999;
-  background-color: white;
-  color: black;
-  padding: 14px 28px;
-  font-size: 13px;
+
+.open-button {
+  background-color: rgb(188, 188, 188);
+  color: white;
+  padding: 16px 20px;
+  border: none;
   cursor: pointer;
-  display: inline-block;
+  opacity: 0.8;
+  bottom: 23px;
+  right: 28px;
+  width: 280px;
 }
 
-.default {
-  border-color: #ccc;
-  color: black;
+
+.form-popup {
+  display: none;
+  bottom: 0;
+  right: 15px;
+
+  z-index: 9;
 }
 
-.default:hover {
-  background: #ececec;
+
+.form-container {
+  max-width: 300px;
+  padding: 10px;
+  background-color: white;
+}
+
+
+.form-container input[type=text],
+.form-container input[type=password] {
+  width: 100%;
+  padding: 15px;
+  margin: 5px 0 22px 0;
+  border: none;
+  background: #f1f1f1;
+}
+
+
+.form-container input[type=text]:focus,
+.form-container input[type=password]:focus {
+  background-color: #ddd;
+  outline: none;
+}
+
+
+.form-container .btn {
+  background-color: #04AA6D;
+  color: white;
+  padding: 16px 20px;
+  border: none;
+  cursor: pointer;
+  width: 100%;
+  margin-bottom: 10px;
+  opacity: 0.8;
+}
+
+
+.form-container .cancel {
+  background-color: red;
+}
+
+.form-container .btn:hover,
+.open-button:hover {
+  opacity: 1;
+}
+
+.astext {
+  background: none;
+  border: none;
+  margin: 0;
+  padding: 0;
+  cursor: pointer;
 }

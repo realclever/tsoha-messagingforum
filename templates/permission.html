@@ -1,5 +1,7 @@
-{% extends "layout.html" %} {% block title %} Main {% endblock %} {% block
-    content %}
+{% extends "layout.html" %}
+{% block title %} Permission {% endblock %}
+{% block content %}
+
 <hr />
 <h3>Add permission to view the thread</h3>
 <hr />
@@ -8,13 +10,13 @@
   <div class="center">
 
     <form action="/permission/{{threads.id}}" class="center" method="POST">
-      <input type="text" name="username" placeholder="Username">
+      <input type="text" name="username" style="text-align: center;" placeholder="Username">
       <br /><br />
-      <input type="submit" name="edit" value="Add permissions" />
+      <input type="submit" class="btn btn-outline-dark btn-sm" name="edit" value="Add permissions" />
       <input type="hidden" name="thread_id" value="{{ threads.id }}">
       <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
     </form>
-    <button class="btn default" onclick="location.href='/'">Return</button>
+    <button class="btn btn-outline-dark btn-sm" onclick="location.href='/'">Return</button>
   </div>
 </div>
 

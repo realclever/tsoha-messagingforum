@@ -1,3 +1,4 @@
+from tabnanny import check
 from app import app
 from flask import render_template, request, redirect, flash
 import users
@@ -10,12 +11,10 @@ from db import db
 @app.route("/", methods=["GET", "POST"])
 def index():
     thread = threads.get_threads()
-    count = subthreads.subthreads_count()
-    kauant = messages.messages_count()
     restricted_thread = threads.get_restricted_threads()
 
     if request.method == "GET":
-        return render_template("index.html", threads=thread, subthreads=count, messages=kauant, restricted_threads=restricted_thread)
+        return render_template("index.html", threads=thread, restricted_threads=restricted_thread)
 
     if request.method == "POST":
         users.check_csrf()
@@ -42,7 +41,7 @@ def index():
         return redirect(request.referrer)
 
     else:
-        flash("Something went wrong.", "warning")
+        flash("Something went wrong.", "danger")
         return redirect(request.referrer)
 
 
@@ -79,7 +78,7 @@ def thread(id):
         return redirect(request.referrer)
 
     else:
-        flash("Something went wrong.", "warning")
+        flash("Something went wrong.", "danger")
         return redirect(request.referrer)
 
 
@@ -87,10 +86,10 @@ def thread(id):
 def subthread(id):
     subthread = subthreads.get_subthread(id)
     message = messages.get_messages(id)
-    permission = users.check_permission(subthread.thread_id)
+    thread = threads.get_thread(id)
 
     if request.method == "GET":
-        return render_template("subthread.html", subthreads=subthread, messages=message, permission=permission)
+        return render_template("subthread.html", subthreads=subthread, threads=thread, messages=message)
 
     if request.method == "POST":
         users.check_csrf()
@@ -105,7 +104,7 @@ def subthread(id):
         return redirect(request.referrer)
 
     else:
-        flash("Something went wrong", "warning")
+        flash("Something went wrong", "danger")
         return redirect(request.referrer)
 
 
@@ -116,8 +115,12 @@ def remove_subthread():
     if "subthread_id" in request.form:
         subthread_id = request.form["subthread_id"]
         subthreads.remove_subthread(subthread_id)
-    flash("Discussion successfully removed", "success")
-    return redirect(request.referrer)
+        flash("Conversation successfully removed", "success")
+        return redirect(request.referrer)
+
+    else:
+        flash("Something went wrong", "danger")
+        return redirect(request.referrer)
 
 
 @app.route("/remove_thread", methods=["POST"])
@@ -128,8 +131,12 @@ def remove_thread():
     if "thread_id" in request.form:
         thread_id = request.form["thread_id"]
         threads.remove_thread(thread_id)
-    flash("Thread successfully removed", "success")
-    return redirect("/")
+        flash("Thread successfully removed", "success")
+        return redirect("/")
+
+    else:
+        flash("Something went wrong", "danger")
+        return redirect(request.referrer)
 
 
 @app.route("/remove_message", methods=["POST"])
@@ -139,8 +146,12 @@ def remove_message():
     if "message_id" in request.form:
         message_id = request.form["message_id"]
         messages.remove_message(message_id)
-    flash("Message successfully removed", "success")
-    return redirect(request.referrer)
+        flash("Message successfully removed", "success")
+        return redirect(request.referrer)
+
+    else:
+        flash("Something went wrong", "danger")
+        return redirect(request.referrer)
 
 
 @app.route('/edit_subthread/<int:id>', methods=["GET", "POST"])
@@ -163,8 +174,11 @@ def edit_subthread(id):
 
         subthreads.edit_subthread(content, subthread_id)
         flash("Message successfully edited.", "success")
+        return redirect(request.referrer)
 
-    return redirect(request.referrer)
+    else:
+        flash("Something went wrong", "danger")
+        return redirect(request.referrer)
 
 
 @app.route('/subthread/<int:s_id>/edit_message/<int:id>', methods=["GET", "POST"])
@@ -188,8 +202,11 @@ def edit_message(id, s_id):
 
         messages.edit_message(content, message_id)
         flash("Message successfully edited.", "success")
+        return redirect(request.referrer)
 
-    return redirect(request.referrer)
+    else:
+        flash("Something went wrong", "danger")
+        return redirect(request.referrer)
 
 
 @app.route("/permission/<int:id>", methods=["GET", "POST"])
@@ -218,8 +235,9 @@ def permission(id):
     if threads.add_permission_to_restricted(thread_id, users.get_check_user(username)):
         flash("Permission granted.", "success")
         return redirect(request.referrer)
+
     else:
-        flash("Something went wrong", "warning")
+        flash("Something went wrong", "danger")
         return redirect(request.referrer)
 
 
@@ -235,15 +253,16 @@ def login():
         if not users.login(username, password):
             flash("Invalid username or password.", "warning")
             return redirect(request.referrer)
+
         else:
-            flash("Successfully logged in", "success")    
+            flash("Successfully logged in", "success")
             return redirect("/")
 
 
 @app.route("/logout")
 def logout():
     users.logout()
-    flash("Successfully logged out", "success")   
+    flash("Successfully logged out", "success")
     return redirect("/")
 
 
@@ -274,8 +293,9 @@ def register():
             return redirect(request.referrer)
 
         if not users.register(username, password1, role):
-            flash("Something went wrong, try again.", "warning")
+            flash("Something went wrong, try again.", "danger")
             return redirect(request.referrer)
+
         else:
             flash("Registration completeted. Welcome to Discussion Forum", "success")
             return redirect("/")
@@ -286,9 +306,9 @@ def search():
 
     if "message" in request.form:
         message = request.form["message"]
-    if message == "":
-        flash("Input at least 1 character to use search.", "warning")
-        return redirect(request.referrer)
+        msgs = messages.search_messages(message)
+        return render_template("search.html", message=message, msgs=msgs, len=len(msgs))
 
-    msgs = messages.search_messages(message)
-    return render_template("search.html", message=message, msgs=msgs, len=len(msgs))
+    else:
+        flash("Something went wrong", "danger")
+        return redirect(request.referrer)

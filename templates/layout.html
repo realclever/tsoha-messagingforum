@@ -2,6 +2,7 @@
 <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='styles/mainpage.css') }}" />
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
+
 <!DOCTYPE html>
 <html lang="en">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -9,9 +10,8 @@
 <div class="container">
   <form action="/search" class="search" method="POST">
     <input type="text" name="message">
-    <button><i class="fa fa-search"
-      style="font-size: 12px;">
-  </i></button>
+    <button><i class="fa fa-search" style="font-size: 12px;">
+      </i></button>
     <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
   </form>
 
@@ -23,7 +23,6 @@
   {% if session.user_id %}<small>Signed in as <b>{{session.user_name}}</b></small>.
   <button onclick="location.href='/logout'"><small>Log out</small></button>
   {% else %}
-
   <button onclick="location.href='/register'"><small>Sign up</small></button>
   <button onclick="location.href='/login'"><small>Log in</small></button>
   {% endif %}
@@ -42,6 +41,17 @@
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
+      <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
+        integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous">
+      </script>
+      <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-ho+j7jyWK8fNQe+A12Hb8AhRq26LrZ/JpcUGGOn+Y7RsweNrtN/tE3MoK7ZeZDyx" crossorigin="anonymous">
+      </script>
+      <script>
+        document.addEventListener('DOMContentLoaded', () => {
+          $('.alert').alert()
+        })
+      </script>
       {% endfor %}
       {% endif %}
       {% endwith %}
@@ -54,4 +64,5 @@
     </div>
   </footer>
 </body>
+
 </html>

@@ -7,7 +7,7 @@
 <h3>This discussion doesn't exist anymore</h3>
 <hr>
 <div class="center">
-<button  onclick="location.href='/'">
+<button class="btn btn-outline-dark btn-sm" onclick="location.href='/'">
     Return
   </button>
 </div>
@@ -24,25 +24,24 @@
                 {{subthreads.created_at.strftime("%I:%M %p %B %d")}}</small> <br><br>{{subthreads.content}}</p>
         <hr>
         {% if session.user_id == subthreads.user_id or session.user_role == 2 %}
-        <a href="/edit_subthread/{{subthreads.id}}"><small>Edit</small></a>
+        <div class="sremove"> &nbsp;<a href="/edit_subthread/{{subthreads.id}}"><small>Edit</small></a><hr></div>
         {% endif %}
-
         {% for message in messages %}
         {% if session.user_id == message.user_id or session.user_role == 2 %}
-
         <hr>
         <p><b>{{message.username}}</b>
-            <br><small>Posted:{{message.created_at.strftime("%I:%M %p %B %d")}}</small><br><br>{{message.content}}</p>
+            <br><small>Posted: {{message.created_at.strftime("%I:%M %p %B %d")}}</small><br><br>{{message.content}}</p>
         <hr>
         <div class="sremove">
+            &nbsp;<a href="/subthread/{{subthreads.id}}/edit_message/{{message.id}}"><small>Edit</small></a>
             <form action="/remove_message"
                 onSubmit="return confirm('Are you sure you wish to remove the message {{message.content}} ?');"
                 method="POST">
-                <a href="/subthread/{{subthreads.id}}/edit_message/{{message.id}}"><small>Edit</small></a>
-                <input type="submit" value="Remove">
+                <input type="submit" class="sremove" style="border:none" value="Remove">
                 <input type="hidden" name="message_id" value="{{message.id}}">
                 <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
             </form>
+            <hr>
         </div>
         {% else %}
         <hr>
@@ -51,19 +50,21 @@
         <hr>
         {% endif %}
         {% endfor %}
+        <div class="center">
+            {% if session.user_role == 1 or session.user_role == 2 %}
+            <form class="form" action="/subthread/{{subthreads.id}}" method="POST">
+                <textarea name="content" placeholder="Reply to this conversation"></textarea>
+                <br /><br />
+                <button class="btn btn-outline-dark btn-sm">Submit reply</button></small>
+                <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
+            </form>
+            {% else %}
+            <br>
+            <h5><a href="/login">Log in</a> to join the conversation</h5>
+            {% endif %}
     </ul>
+</div>
+</div>
 
-    <br>
-    <div class="center">
-        {% if session.user_role == 1 or session.user_role == 2 %}
-        <form class="form" action="/subthread/{{subthreads.id}}" method="POST">
-            <p><input type="text" id="message" name="content" placeholder="Reply to this conversation"></input></p>
-            <button class="btn default" >Submit reply</button>
-            <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
-        </form>
-        {% else %}
-        <h5><a href="/login">Log in</a> to join the conversation</h5>
-        {% endif %}
-    </div>
-    {% endif %}
-    {% endblock %}
+{% endif %}
+{% endblock %}
