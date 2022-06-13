@@ -12,7 +12,7 @@
     <form action="/permission/{{threads.id}}" class="center" method="POST">
       <input type="text" name="username" style="text-align: center;" placeholder="Username">
       <br /><br />
-      <input type="submit" class="btn btn-outline-dark btn-sm" name="edit" value="Add permissions" />
+      <input type="submit" class="btn btn-outline-dark btn-sm" name="edit" value="Add permission" />
       <input type="hidden" name="thread_id" value="{{ threads.id }}">
       <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
     </form>

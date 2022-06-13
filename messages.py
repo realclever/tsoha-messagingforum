@@ -35,21 +35,6 @@ def remove_message(message_id):
     db.session.commit()
 
 
-def messages_count():
-    sql = "SELECT COUNT(*) FROM messages m "\
-        "INNER JOIN subthreads s ON m.subthread_id = s.id "\
-        "INNER JOIN threads t ON s.thread_id = t.id "\
-        "WHERE m.visible = 1 AND s.visible = 1 AND t.visible = 1"
-    return db.session.execute(sql).fetchone()
-
-
-def subthreads_count():
-    sql = "SELECT COUNT(*) FROM subthreads s "\
-        "INNER JOIN threads t ON s.thread_id = t.id "\
-        "WHERE s.visible = 1 AND t.visible = 1"
-    return db.session.execute(sql).fetchone()
-
-
 def edit_message(content, message_id):
     user_id = users.user_id()
     if user_id == 0:
@@ -65,5 +50,5 @@ def search_messages(message):
         "INNER JOIN users u ON m.user_id = u.id "\
         "INNER JOIN subthreads s ON m.subthread_id = s.id "\
         "INNER JOIN threads t ON s.thread_id = t.id "\
-        "WHERE m.content ILIKE :message AND m.visible = 1 AND s.visible = 1 AND t.visible = 1 ORDER by m.id"
-    return db.session.execute(sql, {"message": "%"+message+"%"}).fetchall()   
+        "WHERE m.content ILIKE :message AND m.visible = 1 AND s.visible = 1 AND t.visible = 1 AND restricted = 0 ORDER by m.id"
+    return db.session.execute(sql, {"message": "%"+message+"%"}).fetchall()         

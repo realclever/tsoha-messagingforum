@@ -24,7 +24,6 @@
 <hr>
 <h3>{{thread.name}}</h3>
 <hr>
-
 <div class="container">
     {% if not subthreads %}
     <div class="center">
@@ -34,31 +33,31 @@
     <br>
     {% else %}
 
-    <ul style="list-style-type:none;">
+    <ul>
         <h2>Discussions</h2>
         {% for subthread in subthreads %}
         {% if session.user_id == subthread.user_id or session.user_role == 2 %}
         <div class="sremove">
-        <form action="/remove_subthread"
-            onSubmit="return confirm('Are you sure you wish to remove {{subthread.name}}?');" method="POST">
-            <hr><a href="/subthread/{{subthread.id}}">
-                <li>
-                    <h4>{{subthread.name}}
-                </li>
-                </h4>
-            </a>
-            <small>{{subthread[2]}}</small>
-            <br><br>
-            <small><img src="/static/styles/img/1.png" width="18" height="18"> {{subthread[7]}}&nbsp;Latest reply:
-                {{subthread[6]}}</small>
-            <br>
-            <hr>
-            <input type="submit" class="sremove" style="border:none" value="Remove">
-            <input type="hidden" name="subthread_id" value="{{subthread.id}}">
-            <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
-            <hr>
-        </form>
-    </div>
+            <form action="/remove_subthread"
+                onSubmit="return confirm('Are you sure you wish to remove {{subthread.name}}?');" method="POST">
+                <hr><a href="/subthread/{{subthread.id}}">
+                    <li>
+                        <h4>{{subthread.name}}
+                    </li>
+                    </h4>
+                </a>
+                <small>{{subthread[2]}}</small>
+                <br><br>
+                <small><img src="/static/styles/img/1.png" width="18" height="18"> {{subthread[7]}}&nbsp;Latest reply:
+                    {{subthread[6]}}</small>
+                <br>
+                <hr>
+                <input type="submit" class="sremove" style="border:none" value="Remove">
+                <input type="hidden" name="subthread_id" value="{{subthread.id}}">
+                <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
+                <hr>
+            </form>
+        </div>
         {% else %}
         <hr><a href="/subthread/{{subthread.id}}">
             <li>
@@ -91,8 +90,13 @@
             </form>
         </div>
         <script>
-            function openForm() {document.getElementById("myForm").style.display = "block";}
-            function closeForm() {document.getElementById("myForm").style.display = "none";}
+            function openForm() {
+                document.getElementById("myForm").style.display = "block";
+            }
+
+            function closeForm() {
+                document.getElementById("myForm").style.display = "none";
+            }
         </script>
         {% else %}
         <br>

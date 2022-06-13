@@ -8,7 +8,14 @@ body {
 
 form {
   display: inline;
-  padding: 2px;
+}
+
+ul {
+  width: 100%;
+  margin: auto;
+  list-style-type:none;
+  padding:0;
+  
 }
 
 .center {
@@ -42,6 +49,7 @@ h5 {
   margin-top: 10px;
   letter-spacing: -2px;
   color: rgb(192, 192, 192);
+  text-align: center;
 }
 
 small {

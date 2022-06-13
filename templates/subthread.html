@@ -17,7 +17,7 @@
 <hr>
 
 <div class="container">
-    <ul style="list-style-type:none;">
+    <ul>
         <h2>Comments</h2>
         <hr>
         <p> <b>{{subthreads.username}} (OP)</b> <br><small>Posted:
@@ -32,6 +32,7 @@
         <p><b>{{message.username}}</b>
             <br><small>Posted: {{message.created_at.strftime("%I:%M %p %B %d")}}</small><br><br>{{message.content}}</p>
         <hr>
+        
         <div class="sremove">
             &nbsp;<a href="/subthread/{{subthreads.id}}/edit_message/{{message.id}}"><small>Edit</small></a>
             <form action="/remove_message"
@@ -50,6 +51,7 @@
         <hr>
         {% endif %}
         {% endfor %}
+
         <div class="center">
             {% if session.user_role == 1 or session.user_role == 2 %}
             <form class="form" action="/subthread/{{subthreads.id}}" method="POST">

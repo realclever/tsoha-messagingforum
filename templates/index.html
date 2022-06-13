@@ -6,7 +6,7 @@ content %}
 
 <div class="container">
   <div>
-    <ul style="list-style-type: none">
+    <ul>
       <h2>Forums</h2>
       {% if not threads %}
       <div class="center">
@@ -43,7 +43,7 @@ content %}
   </div>
   {% if session.user_id %}
   <div>
-    <ul style="list-style-type: none">
+    <ul>
       <h2>Restricted Forums</h2>
       {% if not restricted_threads %}
       <div class="center">
@@ -81,7 +81,7 @@ content %}
     {% endif %} {% endif %}
   </div>
 
-  <ul style="list-style-type: none">
+  <ul>
     <div class="center">
       {% if session.user_role == 2 %}
       <button class="btn btn-outline-dark" onclick="openForm()">Create new thread</button>

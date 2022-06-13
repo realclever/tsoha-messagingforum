@@ -52,7 +52,7 @@ def thread(id):
     check_validation = users.check_permission(id)
 
     check_permission = False
-    if thread.restricted and check_validation:
+    if check_validation:
         check_permission = True
 
     if request.method == "GET":
@@ -115,7 +115,7 @@ def remove_subthread():
     if "subthread_id" in request.form:
         subthread_id = request.form["subthread_id"]
         subthreads.remove_subthread(subthread_id)
-        flash("Conversation successfully removed", "success")
+        flash("Discussion successfully removed", "success")
         return redirect(request.referrer)
 
     else:

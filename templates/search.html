@@ -6,19 +6,19 @@
 
 <div class="container">
     <div class="center">
-        <ul style="list-style-type:none;">
-            <h5>Found {{len}} result(s) with keyword "{{message}}" </h5>
-            {% for msg in msgs %}
+        <h5>Found {{len}} result(s) with keyword "{{message}}" </h5>
+        {% for msg in msgs %}
+        <ul>
             <hr>
-            <li><a href="/subthread/{{msg[2]}}"><b>
-                        <h3>{{msg[3]}}</h3>
-                    </b> "{{msg[1]}}" <br> <small>{{msg[5]}} <br> Posted:
-                        {{msg[4].strftime("%I:%M %p %B %d")}}</small></a></li>
+            <a href="/subthread/{{msg[2]}}"><b>
+                    <h3>{{msg[3]}}</h3>
+                </b> "{{msg[1]}}" <br> <small>{{msg[5]}} <br>
+                    Posted: {{msg[4].strftime("%I:%M %p %B %d")}}</small></a>
             <hr>
             {% endfor %}
-            <br>
-            <button class="btn btn-outline-dark btn-sm" onclick="location.href='/'">Return</button>
         </ul>
+        
+        <button class="btn btn-outline-dark btn-sm" onclick="location.href='/'">Return</button>
     </div>
 </div>
 
