@@ -52,7 +52,7 @@ def thread(id):
     check_validation = users.check_permission(id)
 
     check_permission = False
-    if check_validation:
+    if check_validation or users.check_role() == 2:
         check_permission = True
 
     if request.method == "GET":
@@ -115,7 +115,7 @@ def remove_subthread():
     if "subthread_id" in request.form:
         subthread_id = request.form["subthread_id"]
         subthreads.remove_subthread(subthread_id)
-        flash("Discussion successfully removed", "success")
+        flash("Conversation successfully removed", "success")
         return redirect(request.referrer)
 
     else:
@@ -305,8 +305,13 @@ def register():
 def search():
 
     if "message" in request.form:
-        message = request.form["message"]
+        message = request.form["message"] 
+
+    if users.check_role() == 1 or users.check_role() == 0:  
         msgs = messages.search_messages(message)
+        return render_template("search.html", message=message, msgs=msgs, len=len(msgs))
+    elif users.check_role() == 2: 
+        msgs = messages.admin_search_messages(message)
         return render_template("search.html", message=message, msgs=msgs, len=len(msgs))
 
     else:
