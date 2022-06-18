@@ -30,10 +30,10 @@ content %}
       {% if session.user_role == 2 %}
       <div class="sremove">
       <form action="/remove_thread"
-        onSubmit="return confirm('Are you sure you wish to remove {{thread.name}}?');" method="POST">
+        onSubmit="return confirm('Are you sure you wish to remove \042{{thread.name}}\042 thread?');" method="POST">
         <input type="submit" class="sremove" style="border:none" value="Remove" />
         <input type="hidden" name="thread_id" value="{{thread.id}}" />
-        <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
+        <input type="hidden" name="csrf_token" value="{{session.csrf_token}}">
       </form>
     </div>
       <hr>
@@ -41,17 +41,13 @@ content %}
     </ul>
     {% endif %}
   </div>
+
   {% if session.user_id %}
   <div>
-    <ul>
-      <h2>Restricted Forums</h2>
-      {% if not restricted_threads %}
-      <div class="center">
-        <hr>
-        <h4>Nothing here yet</h4>
-        <hr>
-      </div>
-      {% else %}
+      {% if restricted_threads %}
+      <ul>
+        <h2>Restricted Forums</h2>
+        
       {% for restricted_thread in restricted_threads %}
       <hr />
       <li>
@@ -65,15 +61,16 @@ content %}
         reply: {{restricted_thread[8]}}</small>
       <hr />
 
-      {% if session.user_role == 2 and restricted_thread.restricted %}
+      {% if session.user_role == 2 %}
       <div class="sremove">
       <form action="/remove_thread"
-        onSubmit="return confirm('Are you sure you wish to remove {{restricted_thread.name}}?');" method="POST">
+        onSubmit="return confirm('Are you sure you wish to remove \042{{restricted_thread.name}}\042 thread?');" method="POST">
         <input type="submit" class="sremove" style="border:none" value="Remove" />
         <input type="hidden" name="thread_id" value="{{restricted_thread.id}}" />
         <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
       </form>
-      <a href="/permission/{{restricted_thread.id}}"><small>Add permissions</small></a>
+      <a href="/permission/{{restricted_thread.id}}"><small>Add permissions</small></a>&nbsp;
+      <a href="/permission/{{restricted_thread.id}}/remove"><small>Remove permissions</small></a>
       <hr>
     </div>
       {% endif %} {% endfor %}

@@ -36,7 +36,7 @@
         <div class="sremove">
             &nbsp;<a href="/subthread/{{subthreads.id}}/edit_message/{{message.id}}"><small>Edit</small></a>
             <form action="/remove_message"
-                onSubmit="return confirm('Are you sure you wish to remove the message {{message.content}} ?');"
+                onSubmit="return confirm('Are you sure you wish to remove comment \042{{message.content}}\042?');"
                 method="POST">
                 <input type="submit" class="sremove" style="border:none" value="Remove">
                 <input type="hidden" name="message_id" value="{{message.id}}">

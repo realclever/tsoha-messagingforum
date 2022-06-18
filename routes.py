@@ -1,4 +1,3 @@
-from tabnanny import check
 from app import app
 from flask import render_template, request, redirect, flash
 import users
@@ -52,7 +51,7 @@ def thread(id):
     check_validation = users.check_permission(id)
 
     check_permission = False
-    if check_validation or users.check_role() == 2:
+    if check_validation:
         check_permission = True
 
     if request.method == "GET":
@@ -239,6 +238,38 @@ def permission(id):
     else:
         flash("Something went wrong", "danger")
         return redirect(request.referrer)
+
+@app.route("/permission/<int:id>/remove", methods=["GET", "POST"])
+def remove_permission(id):
+    thread = threads.get_thread(id)
+    users.require_role(2)
+
+    if request.method == "GET":
+        return render_template("r_permission.html", threads=thread)
+
+    if request.method == "POST":
+        users.check_csrf()
+
+    if "thread_id" in request.form:
+        username = request.form["username"]
+        thread_id = request.form["thread_id"]
+
+    if len(username) < 1 or len(username) > 20:
+        flash("Username should be 1-20 characters.", "warning")
+        return redirect(request.referrer)
+
+    if users.get_check_user(username) == False:
+        flash("Can't find member. Try again.", "warning")
+        return redirect(request.referrer)
+
+
+    if threads.remove_permission_to_restricted(thread_id, users.get_check_user(username)):
+        flash("Permission removed.", "success")
+        return redirect(request.referrer)   
+
+    else:
+        flash("Something went wrong", "danger")
+        return redirect(request.referrer)        
 
 
 @app.route("/login", methods=["GET", "POST"])

@@ -3,16 +3,16 @@
 {% block content %}
 
 <hr />
-<h3>Add permission to view the thread</h3>
+<h3>Remove permission to view the thread</h3>
 <hr />
 
 <div class="container">
   <div class="center">
 
-    <form action="/permission/{{threads.id}}" class="center" method="POST">
+    <form action="/permission/{{threads.id}}/remove" class="center" method="POST">
       <input type="text" name="username" style="text-align: center;" placeholder="Username">
       <br /><br />
-      <input type="submit" class="btn btn-outline-dark btn-sm" name="edit" value="Add permission" />
+      <input type="submit" class="btn btn-outline-dark btn-sm" name="edit" value="Remove permission" />
       <input type="hidden" name="thread_id" value="{{threads.id}}">
       <input type="hidden" name="csrf_token" value="{{session.csrf_token}}">
     </form>
