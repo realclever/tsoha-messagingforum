@@ -51,7 +51,8 @@ def search_messages(message):
         "INNER JOIN subthreads s ON m.subthread_id = s.id "\
         "INNER JOIN threads t ON s.thread_id = t.id "\
         "WHERE m.content ILIKE :message AND m.visible = 1 AND s.visible = 1 AND t.visible = 1 AND restricted = 0 ORDER by m.id"
-    return db.session.execute(sql, {"message": "%"+message+"%"}).fetchall()              
+    return db.session.execute(sql, {"message": "%"+message+"%"}).fetchall()
+
 
 def admin_search_messages(message):
     sql = "SELECT m.id, m.content, m.subthread_id, s.name, m.created_at, u.username FROM messages m "\
@@ -59,4 +60,4 @@ def admin_search_messages(message):
         "INNER JOIN subthreads s ON m.subthread_id = s.id "\
         "INNER JOIN threads t ON s.thread_id = t.id "\
         "WHERE m.content ILIKE :message AND m.visible = 1 AND s.visible = 1 AND t.visible = 1 ORDER by m.id"
-    return db.session.execute(sql, {"message": "%"+message+"%"}).fetchall()    
+    return db.session.execute(sql, {"message": "%"+message+"%"}).fetchall()

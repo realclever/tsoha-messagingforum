@@ -2,6 +2,7 @@
 {% block title %} Subthread edit {% endblock %}
 {% block content %}
 
+{% if session.user_id == subthreads.user_id or session.user_role == 2 %}
 <hr />
 <h3>Edit message</h3>
 <hr />
@@ -19,4 +20,15 @@
   </div>
 </div>
 
+{% else %}
+<hr>
+<h3>You have no permission to edit this thread</h3>
+<hr>
+<div class="center">
+  <button class="btn btn-outline-dark btn-sm" onclick="location.href='/'">
+    Return
+  </button>
+</div>
+
+{% endif %}
 {% endblock %}

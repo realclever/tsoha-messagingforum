@@ -65,5 +65,6 @@ def get_check_user(username):
     else:
         return result[0]
 
+
 def check_role():
-    return session.get("user_role", 0)        
+    return session.get("user_role", 0)

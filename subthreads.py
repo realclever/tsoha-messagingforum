@@ -3,11 +3,11 @@ import users
 
 
 def get_subthreads(thread_id):
-    sql = '''SELECT id, name, content, user_id, created_at, visible,
+    sql = '''SELECT s.id, s.name, s.content, s.user_id, s.created_at, s.visible, users.username,
     (SELECT TO_CHAR(m.created_at, \'HH12:MI AM Month DD\') FROM messages m 
     WHERE m.subthread_id = s.id AND m.visible = 1 ORDER BY m.created_at DESC LIMIT 1),
     (SELECT COUNT(m.id) FROM messages m WHERE s.id = m.subthread_id AND m.visible = 1)
-    FROM subthreads s WHERE s.thread_id = :thread_id AND s.visible = 1 ORDER BY name'''
+    FROM subthreads s INNER JOIN users ON s.user_id = users.id INNER JOIN threads ON s.thread_id = threads.id WHERE s.thread_id = :thread_id AND s.visible = 1 ORDER BY name'''
     return db.session.execute(sql, {"thread_id": thread_id}).fetchall()
 
 

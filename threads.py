@@ -31,22 +31,22 @@ def get_restricted_threads():
     (SELECT TO_CHAR(m.created_at, 'HH12:MI AM Month DD') FROM messages m INNER JOIN subthreads s ON s.id = m.subthread_id 
     WHERE T.id = s.thread_id AND s.visible = 1 AND m.visible = 1 
     ORDER BY m.created_at DESC LIMIT 1)
-    FROM threads t INNER JOIN threads_restricted r ON t.id=r.thread_id WHERE visible = 1 AND restricted = 1 AND r.user_id=:user_id 
+    FROM threads t INNER JOIN threads_restricted r ON t.id=r.thread_id WHERE t.visible = 1 AND t.restricted = 1 AND r.user_id=:user_id 
     GROUP BY t.id, t.name, t.des, t.created_at, t.visible, t.restricted ORDER BY name'''
     return db.session.execute(sql, {"user_id": user_id}).fetchall()
-    
-   
+
+
 def create_thread(name, des, restricted):
     user_id = users.user_id()
     if user_id == 0:
-        return False
+        return False      
 
     sql = "INSERT INTO threads (name, des, created_at, visible, restricted) VALUES (:name, :des, NOW(), 1, :restricted) RETURNING id"
     thread_id = db.session.execute(
         sql, {"name": name, "des": des, "restricted": restricted}).fetchone()
     db.session.commit()
     if restricted:
-        add_permission_to_restricted(thread_id[0], user_id)   
+        add_permission_to_restricted(thread_id[0], user_id)
     return thread_id
 
 
@@ -62,8 +62,9 @@ def add_permission_to_restricted(thread_id, user_id):
     db.session.commit()
     return True
 
+
 def remove_permission_to_restricted(thread_id, user_id):
     sql = "DELETE FROM threads_restricted WHERE thread_id=:thread_id AND user_id=:user_id"
     db.session.execute(sql, {"thread_id": thread_id, "user_id": user_id})
     db.session.commit()
-    return True    
+    return True

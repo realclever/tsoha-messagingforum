@@ -4,7 +4,6 @@ import users
 import threads
 import subthreads
 import messages
-from db import db
 
 
 @app.route("/", methods=["GET", "POST"])
@@ -25,12 +24,12 @@ def index():
 
     if restricted not in ("0", "1"):
         flash("Unknown thread type, try again.", "warning")
-
         return redirect(request.referrer)
+
     if len(name) < 3 or len(name) > 50:
         flash("Subject should be 3-50 characters.", "warning")
-
         return redirect(request.referrer)
+
     if len(des) < 10 or len(des) > 500:
         flash("Description should be 10-500 characters.", "warning")
         return redirect(request.referrer)
@@ -51,7 +50,7 @@ def thread(id):
     check_validation = users.check_permission(id)
 
     check_permission = False
-    if check_validation:
+    if check_validation or users.check_role() == 2:
         check_permission = True
 
     if request.method == "GET":
@@ -86,9 +85,15 @@ def subthread(id):
     subthread = subthreads.get_subthread(id)
     message = messages.get_messages(id)
     thread = threads.get_thread(id)
+    check_validation = users.check_permission(
+        subthreads.get_subthread(id).thread_id)
+
+    check_permission = False
+    if check_validation or users.check_role() == 2:
+        check_permission = True
 
     if request.method == "GET":
-        return render_template("subthread.html", subthreads=subthread, threads=thread, messages=message)
+        return render_template("subthread.html", subthreads=subthread, threads=thread, messages=message, check_permission=check_permission)
 
     if request.method == "POST":
         users.check_csrf()
@@ -107,21 +112,6 @@ def subthread(id):
         return redirect(request.referrer)
 
 
-@app.route("/remove_subthread", methods=["POST"])
-def remove_subthread():
-    users.check_csrf()
-
-    if "subthread_id" in request.form:
-        subthread_id = request.form["subthread_id"]
-        subthreads.remove_subthread(subthread_id)
-        flash("Conversation successfully removed", "success")
-        return redirect(request.referrer)
-
-    else:
-        flash("Something went wrong", "danger")
-        return redirect(request.referrer)
-
-
 @app.route("/remove_thread", methods=["POST"])
 def remove_thread():
     users.check_csrf()
@@ -132,6 +122,21 @@ def remove_thread():
         threads.remove_thread(thread_id)
         flash("Thread successfully removed", "success")
         return redirect("/")
+
+    else:
+        flash("Something went wrong", "danger")
+        return redirect(request.referrer)
+
+
+@app.route("/remove_subthread", methods=["POST"])
+def remove_subthread():
+    users.check_csrf()
+
+    if "subthread_id" in request.form:
+        subthread_id = request.form["subthread_id"]
+        subthreads.remove_subthread(subthread_id)
+        flash("Conversation successfully removed", "success")
+        return redirect(request.referrer)
 
     else:
         flash("Something went wrong", "danger")
@@ -167,8 +172,8 @@ def edit_subthread(id):
             content = request.form["content"]
             subthread_id = request.form["subthread_id"]
 
-        if len(content) < 1 or len(content) > 800:
-            flash("Reply should be 1-800 characters.", "warning")
+        if len(content) < 10 or len(content) > 300:
+            flash("Description should be 10-300 characters.", "warning")
             return redirect(request.referrer)
 
         subthreads.edit_subthread(content, subthread_id)
@@ -227,17 +232,18 @@ def permission(id):
         flash("Username should be 1-20 characters.", "warning")
         return redirect(request.referrer)
 
-    if users.get_check_user(username) == False:
+    if not users.get_check_user(username):
         flash("Can't find member. Try again.", "warning")
         return redirect(request.referrer)
 
     if threads.add_permission_to_restricted(thread_id, users.get_check_user(username)):
-        flash("Permission granted.", "success")
+        flash("Permission granted", "success")
         return redirect(request.referrer)
 
     else:
         flash("Something went wrong", "danger")
         return redirect(request.referrer)
+
 
 @app.route("/permission/<int:id>/remove", methods=["GET", "POST"])
 def remove_permission(id):
@@ -258,18 +264,17 @@ def remove_permission(id):
         flash("Username should be 1-20 characters.", "warning")
         return redirect(request.referrer)
 
-    if users.get_check_user(username) == False:
+    if not users.get_check_user(username):
         flash("Can't find member. Try again.", "warning")
         return redirect(request.referrer)
 
-
     if threads.remove_permission_to_restricted(thread_id, users.get_check_user(username)):
         flash("Permission removed.", "success")
-        return redirect(request.referrer)   
+        return redirect(request.referrer)
 
     else:
         flash("Something went wrong", "danger")
-        return redirect(request.referrer)        
+        return redirect(request.referrer)
 
 
 @app.route("/login", methods=["GET", "POST"])
@@ -288,6 +293,25 @@ def login():
         else:
             flash("Successfully logged in", "success")
             return redirect("/")
+
+
+@app.route("/search", methods=["POST"])
+def search():
+
+    if "message" in request.form:
+        message = request.form["message"]
+
+    if users.check_role() == 1 or users.check_role() == 0:
+        msgs = messages.search_messages(message)
+        return render_template("search.html", message=message, msgs=msgs, len=len(msgs))
+
+    elif users.check_role() == 2:
+        msgs = messages.admin_search_messages(message)
+        return render_template("search.html", message=message, msgs=msgs, len=len(msgs))
+
+    else:
+        flash("Something went wrong", "danger")
+        return redirect(request.referrer)
 
 
 @app.route("/logout")
@@ -330,21 +354,3 @@ def register():
         else:
             flash("Registration completeted. Welcome to Discussion Forum", "success")
             return redirect("/")
-
-
-@app.route("/search", methods=["POST"])
-def search():
-
-    if "message" in request.form:
-        message = request.form["message"] 
-
-    if users.check_role() == 1 or users.check_role() == 0:  
-        msgs = messages.search_messages(message)
-        return render_template("search.html", message=message, msgs=msgs, len=len(msgs))
-    elif users.check_role() == 2: 
-        msgs = messages.admin_search_messages(message)
-        return render_template("search.html", message=message, msgs=msgs, len=len(msgs))
-
-    else:
-        flash("Something went wrong", "danger")
-        return redirect(request.referrer)

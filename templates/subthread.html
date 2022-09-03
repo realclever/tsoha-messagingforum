@@ -2,20 +2,30 @@
 {% block title %} subthread {% endblock %}
 {% block content %}
 
-{% if not subthreads.visible %}
+{% if subthreads.restricted and not check_permission %}
+<hr>
+<h3>You have no permission to view this conversation</h3>
+<hr>
+<div class="center">
+    <button class="btn btn-outline-dark btn-sm" onclick="location.href='/'">
+        Return
+    </button>
+</div>
+
+{% elif not subthreads.visible %}
 <hr>
 <h3>This discussion doesn't exist anymore</h3>
 <hr>
 <div class="center">
-<button class="btn btn-outline-dark btn-sm" onclick="location.href='/'">
-    Return
-  </button>
+    <button class="btn btn-outline-dark btn-sm" onclick="location.href='/'">
+        Return
+    </button>
 </div>
 {% else %}
+
 <hr>
 <h3>{{subthreads.name}}</h3>
 <hr>
-
 <div class="container">
     <ul>
         <h2>Comments</h2>
@@ -24,15 +34,18 @@
                 {{subthreads.created_at.strftime("%I:%M %p %B %d")}}</small> <br><br>{{subthreads.content}}</p>
         <hr>
         {% if session.user_id == subthreads.user_id or session.user_role == 2 %}
-        <div class="sremove"> &nbsp;<a href="/edit_subthread/{{subthreads.id}}"><small>Edit</small></a><hr></div>
+        <div class="sremove"> &nbsp;<a href="/edit_subthread/{{subthreads.id}}"><small>Edit</small></a>
+            <hr>
+        </div>
         {% endif %}
+
         {% for message in messages %}
         {% if session.user_id == message.user_id or session.user_role == 2 %}
         <hr>
         <p><b>{{message.username}}</b>
             <br><small>Posted: {{message.created_at.strftime("%I:%M %p %B %d")}}</small><br><br>{{message.content}}</p>
         <hr>
-        
+
         <div class="sremove">
             &nbsp;<a href="/subthread/{{subthreads.id}}/edit_message/{{message.id}}"><small>Edit</small></a>
             <form action="/remove_message"
