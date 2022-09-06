@@ -1,10 +1,6 @@
 from app import app
 from flask import render_template, request, redirect, flash
-import users
-import threads
-import subthreads
-import messages
-
+import users, threads, subthreads, messages
 
 @app.route("/", methods=["GET", "POST"])
 def index():
@@ -85,15 +81,9 @@ def subthread(id):
     subthread = subthreads.get_subthread(id)
     message = messages.get_messages(id)
     thread = threads.get_thread(id)
-    check_validation = users.check_permission(
-        subthreads.get_subthread(id).thread_id)
-
-    check_permission = False
-    if check_validation or users.check_role() == 2:
-        check_permission = True
-
+    
     if request.method == "GET":
-        return render_template("subthread.html", subthreads=subthread, threads=thread, messages=message, check_permission=check_permission)
+        return render_template("subthread.html", subthreads=subthread, threads=thread, messages=message)
 
     if request.method == "POST":
         users.check_csrf()

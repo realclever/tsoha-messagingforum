@@ -2,17 +2,8 @@
 {% block title %} subthread {% endblock %}
 {% block content %}
 
-{% if subthreads.restricted and not check_permission %}
-<hr>
-<h3>You have no permission to view this conversation</h3>
-<hr>
-<div class="center">
-    <button class="btn btn-outline-dark btn-sm" onclick="location.href='/'">
-        Return
-    </button>
-</div>
 
-{% elif not subthreads.visible %}
+{% if not subthreads.visible %}
 <hr>
 <h3>This discussion doesn't exist anymore</h3>
 <hr>
@@ -22,7 +13,6 @@
     </button>
 </div>
 {% else %}
-
 <hr>
 <h3>{{subthreads.name}}</h3>
 <hr>
@@ -75,7 +65,7 @@
             </form>
             {% else %}
             <br>
-            <h5><a href="/login">Log in</a> to join the conversation</h5>
+            <h5><a href="/login">Sign in</a> and join the conversation</h5>
             {% endif %}
     </ul>
 </div>

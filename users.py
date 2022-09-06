@@ -58,7 +58,7 @@ def check_permission(thread_id):
 
 
 def get_check_user(username):
-    sql = "SELECT id FROM users WHERE username=:username"
+    sql = "SELECT id FROM users WHERE username ILIKE :username"
     result = db.session.execute(sql, {"username": username}).fetchone()
     if result is None:
         return False
